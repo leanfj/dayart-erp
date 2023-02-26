@@ -1,0 +1,121 @@
+import { NextFunction, Request, Response, Router } from "express";
+import { z } from "zod";
+
+import { Controller } from "../interfaces/controlle.interface";
+import { ClienteService } from "../services/cliente.service";
+
+export class ClienteController implements Controller {
+  
+  public path = "/clientes";
+  public router = Router();
+
+  constructor(private clienteService: ClienteService) {
+    this.initializeRoutes();
+  }
+
+  private async initializeRoutes() {
+    this.router.post(
+      `${this.path}`,
+      (request: Request, response: Response, next: NextFunction) =>
+        this.create(request, response, next)
+    );
+    this.router.get(
+      `${this.path}`,
+      (request: Request, response: Response, next: NextFunction) =>
+        this.getAll(request, response, next)
+    );
+    // this.router.get(
+    //   `${this.path}/DocEntry/:docEntry`,
+    //   (request: Request, response: Response, next: NextFunction) =>
+    //     this.getPurchaseOrdersDocEntry(request, response, next)
+    // );
+    // this.router
+    //   .all(`${this.path}/*`, authMiddleware)
+    //   .patch(`${this.path}/:id`, validationMiddleware(CreatePostDto, true), this.modifyPost)
+    //   .delete(`${this.path}/:id`, this.deletePost)
+    //   .post(this.path, authMiddleware, validationMiddleware(CreatePostDto), this.createPost)
+  }
+  async getAll(req: Request, res: Response, next: NextFunction) {
+
+    const clienteList = await this.clienteService.getAll();
+    
+    return res.status(201).json({ data: clienteList });
+  }
+
+  async create(req: Request, res: Response, next: NextFunction) {
+    const { cliente } = req.body;
+
+    const clientCreated = await this.clienteService.create(cliente);
+
+    return res.status(201).json({ data: clientCreated });
+  }
+
+  async update(request: Request, response: Response, next: NextFunction) {
+    // const purchaseInvoice = req.body
+    // const purchaseInvoiceUpdated = await this.purchaseInvoiceService.update(
+    //   purchaseInvoice
+    // )
+
+    return response.status(200).json({ data: "purchaseInvoiceUpdated" });
+  }
+
+  async delete(req: Request, res: Response) {
+    // const purchaseInvoice = req.body
+    // const purchaseInvoiceDeleted = await this.purchaseInvoiceService.delete(
+    //   purchaseInvoice
+    // )
+
+    return res.status(200).json({ data: "purchaseInvoiceDeleted" });
+  }
+
+  // async getPurchaseOrdersDocnum(
+  //   request: Request,
+  //   response: Response,
+  //   next: NextFunction
+  // ) {
+  //   const { docNum } = request.params;
+
+  //   try {
+  //     const purchaseInvoiceData =
+  //       await this.purchaseOrderService.getPurchaseOrderDocNum(docNum);
+
+  //     return response.status(200).json({ data: purchaseInvoiceData });
+  //   } catch (error) {
+  //     return response.status(404).json({ data: error });
+  //   }
+  // }
+
+  // async getPurchaseOrdersDocEntry(
+  //   request: Request,
+  //   response: Response,
+  //   next: NextFunction
+  // ) {
+  //   const { docEntry } = request.params;
+
+  //   try {
+  //     const purchaseOrderData =
+  //       await this.purchaseOrderService.getPurchaseOrderDocEntry(docEntry);
+
+  //     return response.status(200).json({ data: purchaseOrderData });
+  //   } catch (error) {
+  //     return response.status(404).json({ data: error });
+  //   }
+  // }
+
+  // async cancelPurchaseOrder(
+  //   request: Request,
+  //   response: Response,
+  //   next: NextFunction
+  // ) {
+  //   const { list } = request.body;
+  //   try {
+  //     const bodyList = z.array(z.number()).parse(list);
+  //     const purchaseInvoicedata =
+  //       await this.purchaseOrderService.cancelListPurchaseOrder(bodyList);
+
+  //     return response.status(200).json({ data: purchaseInvoicedata });
+  //   } catch (error) {
+  //     return response.status(401).json({ error });
+  //   }
+  // }
+}

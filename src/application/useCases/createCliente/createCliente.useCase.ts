@@ -1,14 +1,12 @@
 import { UseCase } from "../../../core/application/useCase";
 import { Either, Result, left, right } from "../../../core/logic/result";
+import { AppError } from "../../../core/shared/appError";
 import { ClienteInputDTO } from "../../../domain/DTOS/cliente/cliente.dto";
 import { Cliente } from "../../../domain/entities/cliente/cliente.entity";
 import { ClienteRepository } from "../../../domain/repositories/cliente/cliente.repository";
 import { CreateClienteErrors } from "./createClienteErrors";
 
-type Response = Either<
-  CreateClienteErrors.ClienteAlreadyExists | Result<any>,
-  Result<void>
->;
+type Response = Either<AppError.UnexpectedError, Result<Cliente>>;
 
 export class CreateClienteUseCase
   implements UseCase<ClienteInputDTO, Promise<Response>>
@@ -26,22 +24,20 @@ export class CreateClienteUseCase
       estado: input.estado,
     });
 
-    const clienteExists = await this.clienteRepository.exists(
-      cliente.props.nome
-    );
-
-    if (clienteExists) {
-      return left(
-        new CreateClienteErrors.ClienteAlreadyExists(cliente.props.nome)
-      ) as Response;
-    }
-
     try {
-      await this.clienteRepository.save(cliente);
-    } catch (error) {
-      return left(Result.fail(error)) as Response;
-    }
+      const clienteExists = await this.clienteRepository.exists(
+        cliente.props.nome
+      );
+      if (clienteExists) {
+        return left(
+          new CreateClienteErrors.ClienteAlreadyExists(cliente.props.nome)
+        );
+      }
 
-    return right(Result.ok<void>()) as Response;
+      await this.clienteRepository.save(cliente);
+      return right(Result.ok<Cliente>(cliente));
+    } catch (error) {
+      return left(new AppError.UnexpectedError(error));
+    }
   }
 }

@@ -1,3 +1,4 @@
+import { UniqueEntityID } from "../../core/domain/uniqueIdEntity";
 import { Cliente } from "../../domain/entities/cliente/cliente.entity";
 import { ClienteRepository } from "../../domain/repositories/cliente/cliente.repository";
 
@@ -8,8 +9,8 @@ export class ClienteInMemoryRepository implements ClienteRepository {
     return this.clientes;
   }
 
-  async findById(id: string): Promise<Cliente> {
-    const cliente = this.clientes.find((cliente) => cliente.props.id === id);
+  async findById(id: UniqueEntityID): Promise<Cliente> {
+    const cliente = this.clientes.find((cliente) => cliente.id === id);
 
     if (!cliente) {
       throw new Error("Cliente não encontrado");
@@ -19,7 +20,7 @@ export class ClienteInMemoryRepository implements ClienteRepository {
   }
 
   async exists(nome: string): Promise<boolean> {
-    const cliente = this.clientes.find((cliente) => cliente.props.nome === nome);
+    const cliente = this.clientes.find((cliente) => cliente.nome === nome);
 
     if (!cliente) {
       return false;
@@ -30,20 +31,21 @@ export class ClienteInMemoryRepository implements ClienteRepository {
   }
   async save(cliente: Cliente): Promise<void> {
     const newCliente = Cliente.create({
-      nome: cliente.props.nome,
-      email: cliente.props.email,
-      genero: cliente.props.genero,
-      telefone: cliente.props.telefone,
-      endereco: cliente.props.endereco,
-      cidade: cliente.props.cidade,
-      estado: cliente.props.estado,
-    });
+      nome: cliente.nome,
+      email: cliente.email,
+      genero: cliente.genero,
+      telefone: cliente.telefone,
+      endereco: cliente.endereco,
+      cidade: cliente.cidade,
+      estado: cliente.estado,
+      dataCadastro: cliente.dataCadastro || new Date(),
+    }, cliente.id);
 
     this.clientes.push(newCliente);
   }
 
-  async update(id: string, input: any): Promise<Cliente> {
-    const index = this.clientes.findIndex((cliente) => cliente.props.id === id);
+  async update(id: UniqueEntityID, input: any): Promise<Cliente> {
+    const index = this.clientes.findIndex((cliente) => cliente.id === id);
 
     if (index === -1) {
       throw new Error("Cliente não encontrado");
@@ -56,8 +58,8 @@ export class ClienteInMemoryRepository implements ClienteRepository {
     return this.clientes[index];
   }
 
-  async delete(id: string): Promise<void> {
-    const index = this.clientes.findIndex((c) => c.props.id === id);
+  async delete(id: UniqueEntityID): Promise<void> {
+    const index = this.clientes.findIndex((cliente) => cliente.id === id);
 
     if (index === -1) {
       throw new Error("Cliente não encontrado");

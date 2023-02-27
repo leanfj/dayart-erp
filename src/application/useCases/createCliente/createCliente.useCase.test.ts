@@ -1,5 +1,5 @@
-import { CreateInputDTO } from "../../../domain/DTOS/cliente/cliente.dto";
-import ClienteInMemoryRepository from "../../../infrastructure/repositories/clienteInMemory.repository";
+import { ClienteInputDTO } from "../../../domain/DTOS/cliente/cliente.dto";
+import {ClienteInMemoryRepository} from "../../../infrastructure/repositories/clienteInMemory.repository";
 import { CreateClienteUseCase } from "./createCliente.useCase";
 
 describe("CreateClienteUseCase", () => {
@@ -7,7 +7,7 @@ describe("CreateClienteUseCase", () => {
     const clienteRepository = new ClienteInMemoryRepository();
     const useCase = new CreateClienteUseCase(clienteRepository);
 
-    const input: CreateInputDTO = {
+    const input: ClienteInputDTO = {
       nome: "John Doe",
       email: "john@doe.com.br",
       genero: "masculino",

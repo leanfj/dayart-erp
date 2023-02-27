@@ -1,15 +1,16 @@
 import { NextFunction, Request, Response, Router } from "express";
 import { z } from "zod";
 
-import { Controller } from "../interfaces/controlle.interface";
+import { BaseController } from "../interfaces/baseController";
 import { ClienteService } from "../services/cliente.service";
 
-export class ClienteController implements Controller {
+export class ClienteController extends BaseController {
   
   public path = "/clientes";
   public router = Router();
 
   constructor(private clienteService: ClienteService) {
+    super();
     this.initializeRoutes();
   }
 
@@ -35,19 +36,34 @@ export class ClienteController implements Controller {
     //   .delete(`${this.path}/:id`, this.deletePost)
     //   .post(this.path, authMiddleware, validationMiddleware(CreatePostDto), this.createPost)
   }
+  
   async getAll(req: Request, res: Response, next: NextFunction) {
-
-    const clienteList = await this.clienteService.getAll();
+    try {
+      const result = await this.clienteService.getAll();
+      if(result.isLeft()) {
+        return this.fail(res, result.value.getErrorValue().message);
+      } else {
+        const clienteList = result.value.getValue();
+        return this.ok(res, clienteList);
+      }
+    } catch (err) {
+      return this.fail(res, err);
+    }
     
-    return res.status(201).json({ data: clienteList });
   }
 
   async create(req: Request, res: Response, next: NextFunction) {
-    const { cliente } = req.body;
-
-    const clientCreated = await this.clienteService.create(cliente);
-
-    return res.status(201).json({ data: clientCreated });
+    const cliente = req.body;
+    try {
+      const result = await this.clienteService.create(cliente);
+      if(result.isLeft()) {
+        return this.fail(res, result.value.getErrorValue().message);
+      } else {
+        return this.ok(res, cliente);
+      }
+    } catch (err) {
+      return this.fail(res, err);
+    }
   }
 
   async update(request: Request, response: Response, next: NextFunction) {

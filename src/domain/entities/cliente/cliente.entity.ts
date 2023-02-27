@@ -19,6 +19,47 @@ export class Cliente extends Entity<ClienteProps> {
     super(props, id);
   }
 
+  get id(): UniqueEntityID {
+    return this._id;
+  }
+
+  get nome(): string {
+    return this.props.nome;
+  }
+
+  get email(): string {
+    return this.props.email;
+  }
+
+  get genero(): string {
+    return this.props.genero;
+  }
+  
+  get telefone(): string {
+    return this.props.telefone;
+  }
+
+  get endereco(): string {
+    return this.props.endereco;
+  }
+
+  get cidade(): string {
+    return this.props.cidade;
+  }
+
+  get estado(): string {
+    return this.props.estado;
+  }
+
+  get dataCadastro(): Date {
+    return this.props.dataCadastro;
+  }
+
+  get dataAtualizacao(): Date {
+    return this.props.dataAtualizacao;
+  }
+  
+
   static create(props: ClienteProps, id?: UniqueEntityID): Cliente {
     return new Cliente(props, id);
   }

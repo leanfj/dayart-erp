@@ -1,12 +1,12 @@
 import express from "express";
-import { Controller } from "./interfaces/controlle.interface";
+import { BaseController } from "./interfaces/baseController";
 import { errorMiddleware } from "./middlewares/error.middleware";
 import { loggerMiddleware } from "./middlewares/logger.middleware";
 
 export default class App {
   public app: express.Application;
 
-  constructor(controllers: Controller[]) {
+  constructor(controllers: BaseController[]) {
     this.app = express();
 
     this.initializeMiddlewares();
@@ -37,7 +37,7 @@ export default class App {
     this.app.use(loggerMiddleware);
   }
 
-  private initializeControllers(controllers: Controller[]) {
+  private initializeControllers(controllers: BaseController[]) {
     controllers.forEach((controller) => {
       this.app.use("/", controller.router);
     });

@@ -4,9 +4,13 @@ import { z } from "zod";
 import { BaseController } from "../interfaces/baseController";
 import { ClienteService } from "../services/cliente.service";
 import { UniqueEntityID } from "../../../core/domain/uniqueIdEntity";
+import { CreateClienteErrors } from "../../../application/useCases/createCliente/createClienteErrors";
+import { GetAllClienteErrors } from "../../../application/useCases/getAllCliente/getAllClienteErrors";
+import { UpdateClienteErrors } from "../../../application/useCases/updateCliente/updateClienteErrors";
+import { DeleteClienteErrors } from "../../../application/useCases/deleteCliente/deleteClienteErrors";
+import { ValidatorDTOErrors } from "../../../core/domain/validatorDTOErros";
 
 export class ClienteController extends BaseController {
-  
   public path = "/clientes";
   public router = Router();
 
@@ -49,11 +53,14 @@ export class ClienteController extends BaseController {
     //   .delete(`${this.path}/:id`, this.deletePost)
     //   .post(this.path, authMiddleware, validationMiddleware(CreatePostDto), this.createPost)
   }
-  
+
   async getAll(req: Request, res: Response, next: NextFunction) {
     try {
       const result = await this.clienteService.getAll();
-      if(result.isLeft()) {
+      if (result.isLeft()) {
+        if (result.value instanceof GetAllClienteErrors.ClienteListEmpty) {
+          return this.notFound(res, result.value.getErrorValue().message);
+        }
         return this.fail(res, result.value.getErrorValue().message);
       } else {
         const clienteList = result.value.getValue();
@@ -62,17 +69,23 @@ export class ClienteController extends BaseController {
     } catch (err) {
       return this.fail(res, err);
     }
-    
   }
 
   async create(request: Request, response: Response, next: NextFunction) {
     const cliente = request.body;
     try {
       const result = await this.clienteService.create(cliente);
-      if(result.isLeft()) {
+
+      if (result.isLeft()) {
+        if (result.value instanceof CreateClienteErrors.ClienteAlreadyExists) {
+          return this.conflict(response, result.value.getErrorValue().message);
+        }
+        if (result.value instanceof ValidatorDTOErrors.ValidatorErrors) {
+          return this.invalidInput(response, result.value.getErrorValue().message);
+        }
         return this.fail(response, result.value.getErrorValue().message);
       } else {
-        return this.ok(response, cliente);
+        return this.created(response);
       }
     } catch (err) {
       return this.fail(response, err);
@@ -83,8 +96,14 @@ export class ClienteController extends BaseController {
     const cliente = request.body;
     const id = request.params.id;
     try {
-      const result = await this.clienteService.update(cliente, new UniqueEntityID(id));
-      if(result.isLeft()) {
+      const result = await this.clienteService.update(
+        cliente,
+        new UniqueEntityID(id)
+      );
+      if (result.isLeft()) {
+        if (result.value instanceof UpdateClienteErrors.ClienteNotExists) {
+          return this.notFound(response, result.value.getErrorValue().message);
+        }
         return this.fail(response, result.value.getErrorValue().message);
       } else {
         return this.ok(response, cliente);
@@ -94,11 +113,14 @@ export class ClienteController extends BaseController {
     }
   }
 
-  async delete(request: Request, response: Response,  next: NextFunction) {
+  async delete(request: Request, response: Response, next: NextFunction) {
     const id = request.params.id;
     try {
       const result = await this.clienteService.delete(new UniqueEntityID(id));
-      if(result.isLeft()) {
+      if (result.isLeft()) {
+        if (result.value instanceof DeleteClienteErrors.ClienteNotExists) {
+          return this.notFound(response, result.value.getErrorValue().message);
+        }
         return this.fail(response, result.value.getErrorValue().message);
       } else {
         return this.ok(response, null);
@@ -107,55 +129,4 @@ export class ClienteController extends BaseController {
       return this.fail(response, err);
     }
   }
-
-  // async getPurchaseOrdersDocnum(
-  //   request: Request,
-  //   response: Response,
-  //   next: NextFunction
-  // ) {
-  //   const { docNum } = request.params;
-
-  //   try {
-  //     const purchaseInvoiceData =
-  //       await this.purchaseOrderService.getPurchaseOrderDocNum(docNum);
-
-  //     return response.status(200).json({ data: purchaseInvoiceData });
-  //   } catch (error) {
-  //     return response.status(404).json({ data: error });
-  //   }
-  // }
-
-  // async getPurchaseOrdersDocEntry(
-  //   request: Request,
-  //   response: Response,
-  //   next: NextFunction
-  // ) {
-  //   const { docEntry } = request.params;
-
-  //   try {
-  //     const purchaseOrderData =
-  //       await this.purchaseOrderService.getPurchaseOrderDocEntry(docEntry);
-
-  //     return response.status(200).json({ data: purchaseOrderData });
-  //   } catch (error) {
-  //     return response.status(404).json({ data: error });
-  //   }
-  // }
-
-  // async cancelPurchaseOrder(
-  //   request: Request,
-  //   response: Response,
-  //   next: NextFunction
-  // ) {
-  //   const { list } = request.body;
-  //   try {
-  //     const bodyList = z.array(z.number()).parse(list);
-  //     const purchaseInvoicedata =
-  //       await this.purchaseOrderService.cancelListPurchaseOrder(bodyList);
-
-  //     return response.status(200).json({ data: purchaseInvoicedata });
-  //   } catch (error) {
-  //     return response.status(401).json({ error });
-  //   }
-  // }
 }

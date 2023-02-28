@@ -1,1 +1,36 @@
 GET http://localhost:3333/clientes HTTP/1.1
+
+###
+
+POST http://localhost:3333/clientes HTTP/1.1
+content-type: application/json
+
+{
+      "nome": "",
+      "email": "",
+      "genero": "masculino",
+      "telefone": "2122225555",
+      "endereco": "Rua 1, 123",
+      "cidade": "Rio de Janeiro",
+      "estado": "Rio de Janeiro"
+}
+
+###
+
+PATCH http://localhost:3333/clientes/739e7486-33b2-4ecd-aac2-550b7bb2fb5c HTTP/1.1
+content-type: application/json
+
+{
+      "nome": "Paulo Arruda"
+}
+
+###
+
+DELETE http://localhost:3333/clientes/739e7486-33b2-4ecd-aac2-550b7bb2fb5c HTTP/1.1
+
+
+###
+
+GET http://localhost:3333/clientes/739e7486-33b2-4ecd-aac2-550b7bb2fb5c HTTP/1.1
+
+###

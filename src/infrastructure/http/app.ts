@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import colors from "colors/safe";
 import { BaseController } from "./interfaces/baseController";
 import { errorMiddleware } from "./middlewares/error.middleware";
 import { loggerMiddleware } from "./middlewares/logger.middleware";
@@ -12,13 +13,16 @@ export default class App {
 
     this.initializeMiddlewares();
     this.initializeLogger();
-    this.initializeErrorHandling();
     this.initializeControllers(controllers);
+    this.initializeErrorHandling();
   }
 
   public listen() {
     return this.app.listen(process.env.PORT, () => {
-      console.log(`App listening on the port ${process.env.EXPRESS_PORT}`);
+        
+      console.log(colors.bold(colors.bgGreen(colors.black("-----Servidor iniciado com sucesso!-----"))));
+      console.log(colors.bold(colors.bgGreen(colors.black(`-----App listening on the port ${process.env.PORT}-----`))));
+
     });
   }
 

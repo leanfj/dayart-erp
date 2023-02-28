@@ -24,7 +24,7 @@ export abstract class BaseController {
     return BaseController.jsonResponse(
       res,
       400,
-      message ? message : "Unauthorized"
+      message ? message : "Bad Request"
     );
   }
 
@@ -78,6 +78,14 @@ export abstract class BaseController {
 
   public todo(res: Response) {
     return BaseController.jsonResponse(res, 400, "TODO");
+  }
+
+  public invalidInput(res: Response, message?: string) {
+    return BaseController.jsonResponse(
+      res,
+      422,
+      message ? message : "Invalid request"
+    );
   }
 
   public fail(res: Response, error: Error | string) {

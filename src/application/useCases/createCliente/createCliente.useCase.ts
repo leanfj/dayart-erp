@@ -5,6 +5,7 @@ import { ClienteInputDTO } from "../../../domain/DTOS/cliente/cliente.dto";
 import { Cliente } from "../../../domain/entities/cliente/cliente.entity";
 import { ClienteRepository } from "../../../domain/repositories/cliente/cliente.repository";
 import { CreateClienteErrors } from "./createClienteErrors";
+import { validatorDto } from "../../../core/domain/validatorDTO";
 
 type Response = Either<AppError.UnexpectedError, Result<Cliente>>;
 
@@ -24,7 +25,12 @@ export class CreateClienteUseCase
       estado: input.estado,
     });
 
+    
     try {
+      const validOrError =  await validatorDto(ClienteInputDTO, cliente.props)
+      if (validOrError.isLeft()) {
+        return left(validOrError.value);
+      }
       const clienteExists = await this.clienteRepository.exists(
         cliente.props.nome
       );

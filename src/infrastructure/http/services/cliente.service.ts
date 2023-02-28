@@ -1,3 +1,4 @@
+import { validate } from "class-validator";
 import { CreateClienteUseCase } from "../../../application/useCases/createCliente/createCliente.useCase";
 import { DeleteClienteUseCase } from "../../../application/useCases/deleteCliente/deleteCliente.useCase";
 import { GetAllClienteUseCase } from "../../../application/useCases/getAllCliente/getAllCliente.usecase";
@@ -30,6 +31,8 @@ export class ClienteService {
 
   public async create(cliente: ClienteInputDTO): Promise<Response> {
     try {
+
+
       const result = await this.createClienteUseCase.execute(cliente);
       if (result.isLeft()) {
         return left(result.value);

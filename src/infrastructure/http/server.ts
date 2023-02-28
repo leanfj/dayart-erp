@@ -1,6 +1,7 @@
 import "dotenv/config";
 
 import App from "./app";
+import colors from "colors/safe";
 import { Database } from "../database/sequelize";
 import { ClienteController } from "./controllers/cliente.controller";
 import { ClienteService } from "./services/cliente.service";
@@ -20,17 +21,18 @@ import { ClienteDBRepository } from "../repositories/cliente/clienteDB.repositor
   const server = app.listen();
 
   const closeServer = () => {
-    console.log("closeServer");
+    console.log(colors.bold(colors.bgRed(colors.black("\nDesligando..."))))
 
     server.close(async () => {
-      console.log("Fechando todas as conexões.");
+      console.log(colors.bold(colors.bgRed(colors.black("Fechando todas as conexões...."))))
+
       await dataBase.disconnect();
       process.exit();
     });
 
     setTimeout(async () => {
       console.error(
-        "Desligamento forçado por não conseguir fechar as conexões"
+        colors.bold(colors.bgRed(colors.black("Desligamento forçado por não conseguir fechar as conexões")))
       );
       process.exit(1);
     }, 30 * 1000);

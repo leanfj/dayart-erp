@@ -6,7 +6,7 @@ import { Cliente } from "../../../domain/entities/cliente/cliente.entity";
 import { ClienteRepository } from "../../../domain/repositories/cliente/cliente.repository";
 import { GetAllClienteErrors } from "./getAllClienteErrors";
 
-type Response = Either<AppError.UnexpectedError, Result<Cliente[]>>;
+type Response = Either<AppError.UnexpectedError, Result<Cliente[] | Cliente>>;
 export class GetAllClienteUseCase
   implements UseCase<ClienteInputDTO, Promise<Response>>
 {
@@ -14,13 +14,16 @@ export class GetAllClienteUseCase
 
   async execute(): Promise<Response> {
     try {
-      const clienteList = await this.clienteRepository.findAll();
-      if(clienteList.length === 0) {
+      const clienteData = await this.clienteRepository.findAll();
+      if (clienteData.isLeft()) {
         return left(new GetAllClienteErrors.ClienteListEmpty());
       }
-      return right(Result.ok<Cliente[]>(clienteList));
+
+      return right(
+        Result.ok<Cliente[] | Cliente>(clienteData.value.getValue())
+      );
     } catch (error) {
-      return left(new AppError.UnexpectedError(error))
+      return left(new AppError.UnexpectedError(error));
     }
   }
 }

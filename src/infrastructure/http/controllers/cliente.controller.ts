@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response, Router } from "express";
-import { z } from "zod";
 
 import { BaseController } from "../interfaces/baseController";
 import { ClienteService } from "../services/cliente.service";

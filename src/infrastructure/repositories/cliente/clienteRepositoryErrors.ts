@@ -11,4 +11,12 @@ export namespace ClienteRepositoryErrors {
     }
   }
 
+  export class ClienteListEmpty extends Result<UseCaseError> {    
+    constructor () {
+      super(false, {
+        message: `The Cliente List is empty`
+      } as UseCaseError)
+    }
+  }
+
 }

@@ -15,7 +15,7 @@ export const validatorDto = async <T extends ClassConstructor<any>>(
       new ValidatorDTOErrors.ValidatorErrors(
         `Validation failed. The error fields : ${errors.map(
           ({ constraints }) => Object.keys(constraints).map(
-            (key) => constraints[key] + ', '
+            (key) => constraints[key] + ' '
           )
         )}`
       )

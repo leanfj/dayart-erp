@@ -6,8 +6,8 @@ POST http://localhost:3333/clientes HTTP/1.1
 content-type: application/json
 
 {
-      "nome": "",
-      "email": "",
+      "nome": "Leandro Ferreira de Jesus",
+      "email": "leandro@email.com",
       "genero": "masculino",
       "telefone": "2122225555",
       "endereco": "Rua 1, 123",
@@ -17,20 +17,20 @@ content-type: application/json
 
 ###
 
-PATCH http://localhost:3333/clientes/739e7486-33b2-4ecd-aac2-550b7bb2fb5c HTTP/1.1
+PATCH http://localhost:3333/clientes/c0032ac8-7a3d-4a7a-9c31-78b26d0b1430 HTTP/1.1
 content-type: application/json
 
 {
-      "nome": "Paulo Arruda"
+      "nome": "Leandro Ferreira de Jesus"
 }
 
 ###
 
-DELETE http://localhost:3333/clientes/739e7486-33b2-4ecd-aac2-550b7bb2fb5c HTTP/1.1
+DELETE http://localhost:3333/clientes/c0032ac8-7a3d-4a7a-9c31-78b26d0b1430 HTTP/1.1
 
 
 ###
 
-GET http://localhost:3333/clientes/739e7486-33b2-4ecd-aac2-550b7bb2fb5c HTTP/1.1
+GET http://localhost:3333/clientes/c0032ac8-7a3d-4a7a-9c31-78b26d0b1430 HTTP/1.1
 
 ###

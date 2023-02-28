@@ -1,44 +1,25 @@
-import { Dialect, Sequelize } from "sequelize";
+import { Sequelize, Options } from "sequelize";
+import config from "./config/config";
 import colors from "colors/safe";
+import { initModels } from "./models";
 
 export class Database {
   private sequelizeConnection: Sequelize;
-  private dbName: string;
-  private user: string;
-  private password: string;
-  private host: string;
-  private dialect: Dialect;
-  private port: string;
+  private env = process.env.NODE_ENV || "development";
+  private config = (config as { [key: string]: Options })[this.env];
 
-  constructor(
-    dbName: string,
-    user: string,
-    password: string,
-    host: string,
-    dialect: Dialect,
-    port: string
-  ) {
-    this.dbName = dbName;
-    this.user = user;
-    this.password = password;
-    this.host = host;
-    this.dialect = dialect;
-    this.port = port;
-    this.sequelizeConnection = new Sequelize(
-      this.dbName,
-      this.user,
-      this.password,
-      {
-        host: this.host,
-        dialect: this.dialect,
-        port: Number(this.port),
-        logging: (logStr, options) => this.log(logStr, options),
-        timezone: "-03:00",
-        dialectOptions: {
-          useUTC: false,
-        },
-      }
-    );
+  constructor() {
+    this.sequelizeConnection = new Sequelize({
+      ...this.config,
+      logging: (logStr, options) => this.log(logStr, options),
+      timezone: "-03:00",
+      dialectOptions: {
+        useUTC: false,
+      },
+      define: {
+        underscored: true,
+      },
+    });
   }
 
   public async connect() {
@@ -77,5 +58,9 @@ export class Database {
 
   public async disconnect() {
     await this.sequelizeConnection.close();
+  }
+
+  public initModels() {
+    initModels(this.sequelizeConnection);
   }
 }

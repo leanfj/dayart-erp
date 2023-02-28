@@ -1,4 +1,5 @@
 export interface ClienteInputDTO {
+    id?: string;
     nome: string;
     email: string;
     genero: string;

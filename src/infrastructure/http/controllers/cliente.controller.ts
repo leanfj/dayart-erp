@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { BaseController } from "../interfaces/baseController";
 import { ClienteService } from "../services/cliente.service";
+import { UniqueEntityID } from "../../../core/domain/uniqueIdEntity";
 
 export class ClienteController extends BaseController {
   
@@ -24,6 +25,18 @@ export class ClienteController extends BaseController {
       `${this.path}`,
       (request: Request, response: Response, next: NextFunction) =>
         this.getAll(request, response, next)
+    );
+
+    this.router.put(
+      `${this.path}/:id`,
+      (request: Request, response: Response, next: NextFunction) =>
+        this.update(request, response, next)
+    );
+
+    this.router.delete(
+      `${this.path}/:id`,
+      (request: Request, response: Response, next: NextFunction) =>
+        this.delete(request, response, next)
     );
     // this.router.get(
     //   `${this.path}/DocEntry/:docEntry`,
@@ -52,36 +65,47 @@ export class ClienteController extends BaseController {
     
   }
 
-  async create(req: Request, res: Response, next: NextFunction) {
-    const cliente = req.body;
+  async create(request: Request, response: Response, next: NextFunction) {
+    const cliente = request.body;
     try {
       const result = await this.clienteService.create(cliente);
       if(result.isLeft()) {
-        return this.fail(res, result.value.getErrorValue().message);
+        return this.fail(response, result.value.getErrorValue().message);
       } else {
-        return this.ok(res, cliente);
+        return this.ok(response, cliente);
       }
     } catch (err) {
-      return this.fail(res, err);
+      return this.fail(response, err);
     }
   }
 
   async update(request: Request, response: Response, next: NextFunction) {
-    // const purchaseInvoice = req.body
-    // const purchaseInvoiceUpdated = await this.purchaseInvoiceService.update(
-    //   purchaseInvoice
-    // )
-
-    return response.status(200).json({ data: "purchaseInvoiceUpdated" });
+    const cliente = request.body;
+    const id = request.params.id;
+    try {
+      const result = await this.clienteService.update(cliente, new UniqueEntityID(id));
+      if(result.isLeft()) {
+        return this.fail(response, result.value.getErrorValue().message);
+      } else {
+        return this.ok(response, cliente);
+      }
+    } catch (err) {
+      return this.fail(response, err);
+    }
   }
 
-  async delete(req: Request, res: Response) {
-    // const purchaseInvoice = req.body
-    // const purchaseInvoiceDeleted = await this.purchaseInvoiceService.delete(
-    //   purchaseInvoice
-    // )
-
-    return res.status(200).json({ data: "purchaseInvoiceDeleted" });
+  async delete(request: Request, response: Response,  next: NextFunction) {
+    const id = request.params.id;
+    try {
+      const result = await this.clienteService.delete(new UniqueEntityID(id));
+      if(result.isLeft()) {
+        return this.fail(response, result.value.getErrorValue().message);
+      } else {
+        return this.ok(response, null);
+      }
+    } catch (err) {
+      return this.fail(response, err);
+    }
   }
 
   // async getPurchaseOrdersDocnum(

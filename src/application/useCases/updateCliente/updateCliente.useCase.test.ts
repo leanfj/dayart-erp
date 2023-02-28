@@ -1,11 +1,11 @@
 import { ClienteInputDTO } from "../../../domain/DTOS/cliente/cliente.dto";
 import {ClienteInMemoryRepository} from "../../../infrastructure/repositories/cliente/clienteInMemory.repository";
-import { CreateClienteUseCase } from "./createCliente.useCase";
+import { UpdateClienteUseCase } from "./updateCliente.useCase";
 
 describe("CreateClienteUseCase", () => {
   it("should create a new cliente", async () => {
     const clienteRepository = new ClienteInMemoryRepository();
-    const useCase = new CreateClienteUseCase(clienteRepository);
+    const useCase = new UpdateClienteUseCase(clienteRepository);
 
     const input: ClienteInputDTO = {
       nome: "John Doe",

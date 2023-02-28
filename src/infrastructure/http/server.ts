@@ -1,35 +1,20 @@
 import "dotenv/config";
-import { Dialect } from "sequelize";
 
 import App from "./app";
 import { Database } from "../database/sequelize";
 import { ClienteController } from "./controllers/cliente.controller";
 import { ClienteService } from "./services/cliente.service";
-import { ClienteInMemoryRepository } from "../repositories/clienteInMemory.repository";
+import { ClienteDBRepository } from "../repositories/cliente/clienteDB.repository";
 
 (async () => {
-  const {
-    SEQUELIZE_DB_NAME,
-    SEQUELIZE_DB_USER,
-    SEQUELIZE_DB_PASSWORD,
-    SEQUELIZE_DB_DIALECT,
-    SEQUELIZE_DB_HOST,
-    SEQUELIZE_DB_PORT,
-  } = process.env;
+  const dataBase = new Database();
 
-  const dataBase = new Database(
-    SEQUELIZE_DB_NAME as string,
-    SEQUELIZE_DB_USER as string,
-    SEQUELIZE_DB_PASSWORD as string,
-    SEQUELIZE_DB_HOST as string,
-    SEQUELIZE_DB_DIALECT as Dialect,
-    SEQUELIZE_DB_PORT as string,
-  );
+  dataBase.initModels();
 
-  const connection = await dataBase.connect();
+  await dataBase.connect();
   
   const app = new App([
-    new ClienteController(new ClienteService(new ClienteInMemoryRepository())),
+    new ClienteController(new ClienteService(new ClienteDBRepository())),
   ]);
 
   const server = app.listen();

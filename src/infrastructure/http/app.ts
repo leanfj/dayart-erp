@@ -16,8 +16,8 @@ export default class App {
   }
 
   public listen() {
-    return this.app.listen(process.env.PORT, () => {
-      console.log(`App listening on the port ${process.env.PORT}`);
+    return this.app.listen(process.env.EXPRESS_PORT, () => {
+      console.log(`App listening on the port ${process.env.EXPRESS_PORT}`);
     });
   }
 

@@ -53,18 +53,18 @@ export class ClienteInMemoryRepository implements ClienteRepository {
     this.clientes.push(newCliente);
   }
 
-  async update(id: UniqueEntityID, input: any): Promise<Cliente> {
-    const index = this.clientes.findIndex((cliente) => cliente.id === id);
-
-    if (index === -1) {
-      throw new Error("Cliente não encontrado");
+  async update(id: UniqueEntityID, input: any): Promise<Response> {
+    try {
+      const index = this.clientes.findIndex((cliente) => cliente.id === id);
+      if (index === -1) {
+        return left(new ClienteRepositoryErrors.ClienteNotExists());
+      }
+      const cliente = this.clientes[index];
+      this.clientes[index] = { ...cliente, ...input };
+      return right(Result.ok<Cliente>(this.clientes[index]));
+    } catch (error) {
+      return left(new AppError.UnexpectedError(error));
     }
-
-    const cliente = this.clientes[index];
-
-    this.clientes[index] = { ...cliente, ...input };
-
-    return this.clientes[index];
   }
 
   async delete(id: UniqueEntityID): Promise<Response> {

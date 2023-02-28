@@ -1,5 +1,4 @@
 import { UniqueEntityID } from "../../../core/domain/uniqueIdEntity";
-import { ClienteInputDTO } from "../../../domain/DTOS/cliente/cliente.dto";
 import {ClienteInMemoryRepository} from "../../../infrastructure/repositories/cliente/clienteInMemory.repository";
 import { DeleteClienteUseCase } from "./deleteCliente.useCase";
 

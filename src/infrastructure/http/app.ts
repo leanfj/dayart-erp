@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import { BaseController } from "./interfaces/baseController";
 import { errorMiddleware } from "./middlewares/error.middleware";
 import { loggerMiddleware } from "./middlewares/logger.middleware";
@@ -27,6 +28,7 @@ export default class App {
 
   private initializeMiddlewares() {
     this.app.use(express.json());
+    this.app.use(cors());
   }
 
   private initializeErrorHandling() {

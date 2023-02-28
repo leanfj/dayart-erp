@@ -11,6 +11,6 @@ export interface ClienteRepository {
   findById(id: string | UniqueEntityID): Promise<Response>;
   exists(id: string): Promise<boolean>;
   save(cliente: Cliente): Promise<void>;
-  update(id: string | UniqueEntityID, cliente: Cliente): Promise<Cliente>;
+  update(id: string | UniqueEntityID, cliente: Cliente): Promise<Response>;
   delete(id: string | UniqueEntityID): Promise<Response>;
 }

@@ -97,40 +97,48 @@ export class ClienteDBRepository implements ClienteRepository {
     });
   }
 
-  async update(id: UniqueEntityID, input: any): Promise<Cliente> {
-    const clienteData = this.findById(id);
+  async update(id: UniqueEntityID, input: any): Promise<Response> {
+    try {
+      const clienteData = await this.findById(id);
 
-    if (!clienteData) {
-      throw new Error("Cliente não encontrado");
-    }
-
-    await ClienteModel.update(
-      {
-        id: id.toString(),
-        nome: input.nome,
-        email: input.email,
-        genero: input.genero,
-        telefone: input.telefone,
-        endereco: input.endereco,
-        cidade: input.cidade,
-        estado: input.estado,
-      },
-      {
-        where: {
-          id: id.toString(),
-        },
+      if (!clienteData) {
+        return left(new ClienteRepositoryErrors.ClienteNotExists());
       }
-    );
 
-    return Cliente.create({
-      nome: input.nome,
-      email: input.email,
-      genero: input.genero,
-      telefone: input.telefone,
-      endereco: input.endereco,
-      cidade: input.cidade,
-      estado: input.estado,
-    });
+      await ClienteModel.update(
+        {
+          id: id.toString(),
+          nome: input.nome,
+          email: input.email,
+          genero: input.genero,
+          telefone: input.telefone,
+          endereco: input.endereco,
+          cidade: input.cidade,
+          estado: input.estado,
+        },
+        {
+          where: {
+            id: id.toString(),
+          },
+        }
+      );
+
+      return right(
+        Result.ok<Cliente>(
+          Cliente.create({
+            nome: input.nome,
+            email: input.email,
+            genero: input.genero,
+            telefone: input.telefone,
+            endereco: input.endereco,
+            cidade: input.cidade,
+            estado: input.estado,
+          })
+        )
+      );
+    } catch (error) {
+      return left(new AppError.UnexpectedError(error));
+    }
   }
 
   async delete(id: UniqueEntityID): Promise<Response> {

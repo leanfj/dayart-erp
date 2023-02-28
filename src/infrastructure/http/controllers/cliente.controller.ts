@@ -27,7 +27,7 @@ export class ClienteController extends BaseController {
         this.getAll(request, response, next)
     );
 
-    this.router.put(
+    this.router.patch(
       `${this.path}/:id`,
       (request: Request, response: Response, next: NextFunction) =>
         this.update(request, response, next)

@@ -15,6 +15,9 @@ describe("CreateClienteUseCase", () => {
       endereco: "Rua 1, 123",
       cidade: "Rio de Janeiro",
       estado: "Rio de Janeiro",
+      cep: "22222222",
+      cpf: "22222222222",
+      dataEvento: new Date(),
     };
 
     const result = await useCase.execute(input);

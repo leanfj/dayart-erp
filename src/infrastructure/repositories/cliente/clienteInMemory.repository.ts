@@ -10,8 +10,35 @@ type Response = Either<AppError.UnexpectedError, Result<Cliente | Cliente[]>>;
 export class ClienteInMemoryRepository implements ClienteRepository {
   private clientes: Cliente[] = [];
 
-  async findAll(): Promise<Cliente[]> {
-    return this.clientes;
+  async findAll(): Promise<Response> {
+    try {
+      const clienteData = this.clientes;
+      if (clienteData.length === 0) {
+        return left(new ClienteRepositoryErrors.ClienteListEmpty());
+      }
+
+      const clientes = clienteData.map((cliente) => {
+        return Cliente.create(
+          {
+            nome: cliente.nome,
+            email: cliente.email,
+            genero: cliente.genero,
+            telefone: cliente.telefone,
+            endereco: cliente.endereco,
+            cidade: cliente.cidade,
+            estado: cliente.estado,
+            cep: cliente.cep,
+            cpf: cliente.cpf,
+            dataEvento: cliente.dataEvento,
+          },
+          new UniqueEntityID(cliente.id.toString())
+        );
+      });
+
+      return right(Result.ok<Cliente[]>(clientes));
+    } catch (error) {
+      return left(new AppError.UnexpectedError(error));
+    }
   }
 
   async findById(id: UniqueEntityID): Promise<Response> {
@@ -35,22 +62,30 @@ export class ClienteInMemoryRepository implements ClienteRepository {
 
     return true;
   }
-  async save(cliente: Cliente): Promise<void> {
-    const newCliente = Cliente.create(
-      {
-        nome: cliente.nome,
-        email: cliente.email,
-        genero: cliente.genero,
-        telefone: cliente.telefone,
-        endereco: cliente.endereco,
-        cidade: cliente.cidade,
-        estado: cliente.estado,
-        dataCadastro: cliente.dataCadastro || new Date(),
-      },
-      cliente.id
-    );
+  async save(cliente: Cliente): Promise<Response> {
+    try {
+      const newCliente = Cliente.create(
+        {
+          nome: cliente.nome,
+          email: cliente.email,
+          genero: cliente.genero,
+          telefone: cliente.telefone,
+          endereco: cliente.endereco,
+          cidade: cliente.cidade,
+          estado: cliente.estado,
+          cep: cliente.cep,
+          cpf: cliente.cpf,
+          dataEvento: cliente.dataEvento,
+          dataCadastro: cliente.dataCadastro || new Date(),
+        },
+        cliente.id
+      );
 
-    this.clientes.push(newCliente);
+      this.clientes.push(newCliente);
+      return right(Result.ok<Cliente>(newCliente));
+    } catch (error) {
+      return left(new AppError.UnexpectedError(error));
+    }
   }
 
   async update(id: UniqueEntityID, input: any): Promise<Response> {

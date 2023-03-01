@@ -1,5 +1,5 @@
 import { ClienteInputDTO } from "../../../domain/DTOS/cliente/cliente.dto";
-import {ClienteInMemoryRepository} from "../../../infrastructure/repositories/cliente/clienteInMemory.repository";
+import { ClienteInMemoryRepository } from "../../../infrastructure/repositories/cliente/clienteInMemory.repository";
 import { CreateClienteUseCase } from "./createCliente.useCase";
 
 describe("CreateClienteUseCase", () => {
@@ -15,11 +15,13 @@ describe("CreateClienteUseCase", () => {
       endereco: "Rua 1, 123",
       cidade: "Rio de Janeiro",
       estado: "Rio de Janeiro",
+      cep: "22222222",
+      cpf: "22222222222",
+      dataEvento: new Date(),
     };
 
     const result = await useCase.execute(input);
 
     expect(result.isRight()).toBeTruthy();
-
   });
 });

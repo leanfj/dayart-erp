@@ -145,6 +145,9 @@ export class ClienteDBRepository implements ClienteRepository {
           endereco: input.endereco,
           cidade: input.cidade,
           estado: input.estado,
+          cep: input.cep,
+          cpf: input.cpf,
+          dataEvento: input.dataEvento,
         },
         {
           where: {

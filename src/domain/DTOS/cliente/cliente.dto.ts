@@ -3,6 +3,7 @@ export class ClienteInputDTO {
   id?: string;
 
   @IsNotEmpty()
+  @IsOptional()
   nome: string;
 
   @IsNotEmpty()

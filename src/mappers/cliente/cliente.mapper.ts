@@ -3,7 +3,7 @@ import { Mapper } from "../../core/shared/mapper";
 import { UniqueEntityID } from "../../core/domain/uniqueIdEntity";
 import { Cliente } from "../../domain/entities/cliente/cliente.entity";
 
-export class PostMap implements Mapper<Cliente> {
+export class ClienteMapper implements Mapper<Cliente> {
 
   public static toDomain (raw: any): Cliente {
     
@@ -14,7 +14,10 @@ export class PostMap implements Mapper<Cliente> {
         endereco: raw.endereco,
         cidade: raw.cidade,
         estado: raw.estado,
-        genero: raw.genero        
+        genero: raw.genero,
+        cep: raw.cep,
+        cpf: raw.cpf,
+        dataEvento: raw.dataEvento
     }, new UniqueEntityID(raw.id))
 
     return cliente;
@@ -28,7 +31,10 @@ export class PostMap implements Mapper<Cliente> {
         endereco: cliente.endereco,
         cidade: cliente.cidade,
         estado: cliente.estado,
-        genero: cliente.genero
+        genero: cliente.genero,
+        cep: cliente.cep,
+        cpf: cliente.cpf,
+        dataEvento: cliente.dataEvento
     }
   }
 }

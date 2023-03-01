@@ -10,6 +10,9 @@ type ClienteProps = {
   endereco: string;
   cidade: string;
   estado: string;
+  cep: string;
+  cpf: string;
+  dataEvento: Date;
   dataCadastro?: Date;
   dataAtualizacao?: Date;
 }
@@ -51,6 +54,18 @@ export class Cliente extends Entity<ClienteProps> {
     return this.props.estado;
   }
 
+  get cep(): string {
+    return this.props.cep;
+  }
+
+  get cpf(): string {
+    return this.props.cpf;
+  }
+
+  get dataEvento(): Date {
+    return this.props.dataEvento;
+  }
+
   get dataCadastro(): Date {
     return this.props.dataCadastro;
   }
@@ -58,7 +73,6 @@ export class Cliente extends Entity<ClienteProps> {
   get dataAtualizacao(): Date {
     return this.props.dataAtualizacao;
   }
-  
 
   static create(props: ClienteProps, id?: UniqueEntityID): Cliente {
     return new Cliente(props, id);

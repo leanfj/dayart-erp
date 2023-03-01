@@ -30,6 +30,18 @@ export class ClienteInputDTO {
   @IsOptional()
   estado: string;
 
+  @IsNotEmpty()
+  @IsOptional()
+  cep: string;
+
+  @IsNotEmpty()
+  @IsOptional()
+  cpf: string;
+
+  @IsNotEmpty()
+  @IsOptional()
+  dataEvento: Date;
+
   dataCadastro?: Date;
   dataAtualizacao?: Date;
 }

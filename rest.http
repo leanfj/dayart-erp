@@ -6,7 +6,7 @@ POST http://localhost:3333/clientes HTTP/1.1
 content-type: application/json
 
 {
-      "nome": "Leandro Ferreira de Jesus",
+      "nome": "",
       "email": "leandro@email.com",
       "genero": "masculino",
       "telefone": "2122225555",

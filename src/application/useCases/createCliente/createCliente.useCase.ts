@@ -22,9 +22,11 @@ export class CreateClienteUseCase
       endereco: input.endereco,
       cidade: input.cidade,
       estado: input.estado,
+      cep: input.cep,
+      cpf: input.cpf,
+      dataEvento: input.dataEvento,
     });
 
-    
     try {
       const clienteExists = await this.clienteRepository.exists(
         cliente.props.nome

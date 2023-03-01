@@ -17,7 +17,7 @@ export class ClienteDBRepository implements ClienteRepository {
       if (clienteData.length === 0) {
         return left(new ClienteRepositoryErrors.ClienteListEmpty());
       }
-  
+
       const clientes = clienteData.map((cliente) => {
         return Cliente.create(
           {
@@ -28,18 +28,18 @@ export class ClienteDBRepository implements ClienteRepository {
             endereco: cliente.endereco,
             cidade: cliente.cidade,
             estado: cliente.estado,
+            cep: cliente.cep,
+            cpf: cliente.cpf,
+            dataEvento: cliente.dataEvento,
           },
           new UniqueEntityID(cliente.id)
         );
       });
-  
+
       return right(Result.ok<Cliente[]>(clientes));
-      
     } catch (error) {
       return left(new AppError.UnexpectedError(error));
-      
     }
-
   }
 
   async findById(id: UniqueEntityID): Promise<Response> {
@@ -58,6 +58,9 @@ export class ClienteDBRepository implements ClienteRepository {
         endereco: clienteData.endereco,
         cidade: clienteData.cidade,
         estado: clienteData.estado,
+        cep: clienteData.cep,
+        cpf: clienteData.cpf,
+        dataEvento: clienteData.dataEvento,
       });
 
       return right(Result.ok<Cliente>(cliente));
@@ -91,11 +94,14 @@ export class ClienteDBRepository implements ClienteRepository {
           endereco: cliente.endereco,
           cidade: cliente.cidade,
           estado: cliente.estado,
+          cep: cliente.cep,
+          cpf: cliente.cpf,
+          dataEvento: cliente.dataEvento,
           dataCadastro: cliente.dataCadastro || new Date(),
         },
         cliente.id
       );
-  
+
       const clienteData = await ClienteModel.create({
         id: newCliente.id.toString(),
         nome: newCliente.nome,
@@ -105,15 +111,17 @@ export class ClienteDBRepository implements ClienteRepository {
         endereco: newCliente.endereco,
         cidade: newCliente.cidade,
         estado: newCliente.estado,
+        cep: newCliente.cep,
+        cpf: newCliente.cpf,
+        dataEvento: newCliente.dataEvento,
         dataCadastro: newCliente.dataCadastro,
       });
 
       if (!clienteData) {
         return left(new ClienteRepositoryErrors.ClienteNotExists());
       }
-      
-      return right(Result.ok<Cliente>(newCliente));
 
+      return right(Result.ok<Cliente>(newCliente));
     } catch (error) {
       return left(new AppError.UnexpectedError(error));
     }
@@ -155,6 +163,9 @@ export class ClienteDBRepository implements ClienteRepository {
             endereco: input.endereco,
             cidade: input.cidade,
             estado: input.estado,
+            cep: input.cep,
+            cpf: input.cpf,
+            dataEvento: input.dataEvento,
           })
         )
       );

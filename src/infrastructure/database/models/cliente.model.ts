@@ -19,6 +19,9 @@ export class ClienteModel extends Model<
   declare endereco: string | null;
   declare cidade: string | null;
   declare estado: string | null;
+  declare cep: string | null;
+  declare cpf: string | null;
+  declare dataEvento: Date | null;
   declare dataCadastro: CreationOptional<Date | null>;
   declare dataAtualizacao: CreationOptional<Date | null>;
 
@@ -52,6 +55,15 @@ export class ClienteModel extends Model<
         },
         estado: {
           type: DataTypes.STRING(255),
+        },
+        cep: {
+          type: DataTypes.STRING(255),
+        },
+        cpf: {
+          type: DataTypes.STRING(255),
+        },
+        dataEvento: {
+          type: DataTypes.DATE,
         },
         dataCadastro: {
           type: "TIMESTAMP",

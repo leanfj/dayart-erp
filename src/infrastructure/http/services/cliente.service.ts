@@ -27,7 +27,7 @@ export class ClienteService {
 
   public async create(cliente: ClienteInputDTO): Promise<Response> {
     try {
-      const validOrError = await validatorDto(ClienteInputDTO, cliente);
+      const validOrError = await validatorDto(ClienteInputDTO, cliente, {});
       if (validOrError.isLeft()) {
         return left(validOrError.value);
       }
@@ -62,7 +62,7 @@ export class ClienteService {
     id: UniqueEntityID
   ): Promise<Response> {
     try {
-      const validOrError = await validatorDto(ClienteInputDTO, cliente);
+      const validOrError = await validatorDto(ClienteInputDTO, cliente, {skipMissingProperties: true});
       if (validOrError.isLeft()) {
         return left(validOrError.value);
       }

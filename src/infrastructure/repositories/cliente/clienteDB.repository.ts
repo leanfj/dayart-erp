@@ -2,6 +2,7 @@ import { UniqueEntityID } from "../../../core/domain/uniqueIdEntity";
 import { Either, Result, left, right } from "../../../core/logic/result";
 import { AppError } from "../../../core/shared/appError";
 import { Cliente } from "../../../domain/entities/cliente/cliente.entity";
+import { ClienteMapper } from "../../../domain/mappers/cliente/cliente.mapper";
 import { ClienteRepository } from "../../../domain/repositories/cliente/cliente.repository";
 import { ClienteModel } from "../../database/models";
 import { ClienteRepositoryErrors } from "./clienteRepositoryErrors";
@@ -19,21 +20,7 @@ export class ClienteDBRepository implements ClienteRepository {
       }
 
       const clientes = clienteData.map((cliente) => {
-        return Cliente.create(
-          {
-            nome: cliente.nome,
-            email: cliente.email,
-            genero: cliente.genero,
-            telefone: cliente.telefone,
-            endereco: cliente.endereco,
-            cidade: cliente.cidade,
-            estado: cliente.estado,
-            cep: cliente.cep,
-            cpf: cliente.cpf,
-            dataEvento: cliente.dataEvento,
-          },
-          new UniqueEntityID(cliente.id)
-        );
+        return ClienteMapper.toDomain(cliente);
       });
 
       return right(Result.ok<Cliente[]>(clientes));
@@ -50,18 +37,7 @@ export class ClienteDBRepository implements ClienteRepository {
         return left(new ClienteRepositoryErrors.ClienteNotExists());
       }
 
-      const cliente = Cliente.create({
-        nome: clienteData.nome,
-        email: clienteData.email,
-        genero: clienteData.genero,
-        telefone: clienteData.telefone,
-        endereco: clienteData.endereco,
-        cidade: clienteData.cidade,
-        estado: clienteData.estado,
-        cep: clienteData.cep,
-        cpf: clienteData.cpf,
-        dataEvento: clienteData.dataEvento,
-      });
+      const cliente = ClienteMapper.toDomain(clienteData);
 
       return right(Result.ok<Cliente>(cliente));
     } catch (error) {
@@ -85,36 +61,12 @@ export class ClienteDBRepository implements ClienteRepository {
 
   async save(cliente: Cliente): Promise<Response> {
     try {
-      const newCliente = Cliente.create(
-        {
-          nome: cliente.nome,
-          email: cliente.email,
-          genero: cliente.genero,
-          telefone: cliente.telefone,
-          endereco: cliente.endereco,
-          cidade: cliente.cidade,
-          estado: cliente.estado,
-          cep: cliente.cep,
-          cpf: cliente.cpf,
-          dataEvento: cliente.dataEvento,
-          dataCadastro: cliente.dataCadastro || new Date(),
-        },
-        cliente.id
-      );
+      const newCliente = ClienteMapper.toDomain(cliente);
 
+      
       const clienteData = await ClienteModel.create({
-        id: newCliente.id.toString(),
-        nome: newCliente.nome,
-        email: newCliente.email,
-        genero: newCliente.genero,
-        telefone: newCliente.telefone,
-        endereco: newCliente.endereco,
-        cidade: newCliente.cidade,
-        estado: newCliente.estado,
-        cep: newCliente.cep,
-        cpf: newCliente.cpf,
-        dataEvento: newCliente.dataEvento,
-        dataCadastro: newCliente.dataCadastro,
+        ...ClienteMapper.toPersistence(newCliente),
+        dataCadastro: new Date(),
       });
 
       if (!clienteData) {
@@ -136,19 +88,7 @@ export class ClienteDBRepository implements ClienteRepository {
       }
 
       await ClienteModel.update(
-        {
-          id: id.toString(),
-          nome: input.nome,
-          email: input.email,
-          genero: input.genero,
-          telefone: input.telefone,
-          endereco: input.endereco,
-          cidade: input.cidade,
-          estado: input.estado,
-          cep: input.cep,
-          cpf: input.cpf,
-          dataEvento: input.dataEvento,
-        },
+        ClienteMapper.toPersistence(input),
         {
           where: {
             id: id.toString(),
@@ -158,18 +98,7 @@ export class ClienteDBRepository implements ClienteRepository {
 
       return right(
         Result.ok<Cliente>(
-          Cliente.create({
-            nome: input.nome,
-            email: input.email,
-            genero: input.genero,
-            telefone: input.telefone,
-            endereco: input.endereco,
-            cidade: input.cidade,
-            estado: input.estado,
-            cep: input.cep,
-            cpf: input.cpf,
-            dataEvento: input.dataEvento,
-          })
+         ClienteMapper.toDomain(input)
         )
       );
     } catch (error) {

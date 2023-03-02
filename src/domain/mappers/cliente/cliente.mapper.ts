@@ -1,9 +1,9 @@
 
-import { Mapper } from "../../core/shared/mapper";
-import { UniqueEntityID } from "../../core/domain/uniqueIdEntity";
-import { Cliente } from "../../domain/entities/cliente/cliente.entity";
+import { Mapper } from "../../../core/shared/mapper";
+import { UniqueEntityID } from "../../../core/domain/uniqueIdEntity";
+import { Cliente } from "../../entities/cliente/cliente.entity";
 
-export class ClienteMapper implements Mapper<Cliente> {
+export abstract class ClienteMapper implements Mapper<Cliente> {
 
   public static toDomain (raw: any): Cliente {
     

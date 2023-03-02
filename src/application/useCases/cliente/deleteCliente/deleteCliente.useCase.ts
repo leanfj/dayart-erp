@@ -1,10 +1,9 @@
-import { UseCase } from "../../../core/application/useCase";
-import { UniqueEntityID } from "../../../core/domain/uniqueIdEntity";
-import { Either, Result, left, right } from "../../../core/logic/result";
-import { AppError } from "../../../core/shared/appError";
-import { ClienteInputDTO } from "../../../domain/DTOS/cliente/cliente.dto";
-import { Cliente } from "../../../domain/entities/cliente/cliente.entity";
-import { ClienteRepository } from "../../../domain/repositories/cliente/cliente.repository";
+import { UseCase } from "../../../../core/application/useCase";
+import { UniqueEntityID } from "../../../../core/domain/uniqueIdEntity";
+import { Either, Result, left, right } from "../../../../core/logic/result";
+import { AppError } from "../../../../core/shared/appError";
+import { Cliente } from "../../../../domain/entities/cliente/cliente.entity";
+import { ClienteRepository } from "../../../../domain/repositories/cliente/cliente.repository";
 import { DeleteClienteErrors } from "./deleteClienteErrors";
 
 type Response = Either<AppError.UnexpectedError, Result<Cliente>>;

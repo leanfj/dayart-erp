@@ -1,5 +1,5 @@
-import { UniqueEntityID } from "../../../core/domain/uniqueIdEntity";
-import {ClienteInMemoryRepository} from "../../../infrastructure/repositories/cliente/clienteInMemory.repository";
+import { UniqueEntityID } from "../../../../core/domain/uniqueIdEntity";
+import {ClienteInMemoryRepository} from "../../../../infrastructure/repositories/cliente/clienteInMemory.repository";
 import { DeleteClienteUseCase } from "./deleteCliente.useCase";
 
 describe("CreateClienteUseCase", () => {

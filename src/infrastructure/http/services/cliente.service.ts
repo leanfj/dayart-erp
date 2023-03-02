@@ -1,7 +1,7 @@
-import { CreateClienteUseCase } from "../../../application/useCases/createCliente/createCliente.useCase";
-import { DeleteClienteUseCase } from "../../../application/useCases/deleteCliente/deleteCliente.useCase";
-import { GetAllClienteUseCase } from "../../../application/useCases/getAllCliente/getAllCliente.usecase";
-import { UpdateClienteUseCase } from "../../../application/useCases/updateCliente/updateCliente.useCase";
+import { CreateClienteUseCase } from "../../../application/useCases/cliente/createCliente/createCliente.useCase";
+import { DeleteClienteUseCase } from "../../../application/useCases/cliente/deleteCliente/deleteCliente.useCase";
+import { GetAllClienteUseCase } from "../../../application/useCases/cliente/getAllCliente/getAllCliente.usecase";
+import { UpdateClienteUseCase } from "../../../application/useCases/cliente/updateCliente/updateCliente.useCase";
 import { UniqueEntityID } from "../../../core/domain/uniqueIdEntity";
 import { validatorDto } from "../../../core/domain/validatorDTO";
 import { Either, Result, left, right } from "../../../core/logic/result";

@@ -1,12 +1,13 @@
-import { UseCase } from "../../../core/application/useCase";
-import { Either, Result, left, right } from "../../../core/logic/result";
-import { AppError } from "../../../core/shared/appError";
-import { ClienteInputDTO } from "../../../domain/DTOS/cliente/cliente.dto";
-import { Cliente } from "../../../domain/entities/cliente/cliente.entity";
-import { ClienteRepository } from "../../../domain/repositories/cliente/cliente.repository";
+import { UseCase } from "../../../../core/application/useCase";
+import { Either, Result, left, right } from "../../../../core/logic/result";
+import { AppError } from "../../../../core/shared/appError";
+import { ClienteInputDTO } from "../../../../domain/DTOS/cliente/cliente.dto";
+import { Cliente } from "../../../../domain/entities/cliente/cliente.entity";
+import { ClienteRepository } from "../../../../domain/repositories/cliente/cliente.repository";
 import { GetAllClienteErrors } from "./getAllClienteErrors";
 
 type Response = Either<AppError.UnexpectedError, Result<Cliente[] | Cliente>>;
+
 export class GetAllClienteUseCase
   implements UseCase<ClienteInputDTO, Promise<Response>>
 {

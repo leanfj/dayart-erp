@@ -1,3 +1,4 @@
+import { validatorDto } from "../../../../core/domain/validatorDTO";
 import { UseCase } from "../../../../core/application/useCase";
 import { Either, Result, left, right } from "../../../../core/logic/result";
 import { AppError } from "../../../../core/shared/appError";
@@ -15,7 +16,11 @@ export class RegisterUsuarioUseCase
   constructor(private usuarioRepository: UsuarioRepository) {}
 
   async execute(input: UsuarioInputDTO): Promise<Response> {
-    
+    const validOrError = await validatorDto(UsuarioInputDTO, input, {});
+    if (validOrError.isLeft()) {
+      return left(validOrError.value);
+    }
+
     try {
       const usuarioExists = await this.usuarioRepository.exists(input.email);
 
@@ -26,7 +31,7 @@ export class RegisterUsuarioUseCase
       }
 
       const salt = await bcrypt.genSalt(12);
-      
+
       const passwordHash = await bcrypt.hash(input.password, salt);
 
       const usuario = Usuario.create({

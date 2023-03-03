@@ -27,10 +27,6 @@ export class UsuarioService {
 
   public async create(usuario: UsuarioInputDTO): Promise<Response> {
     try {
-      const validOrError = await validatorDto(UsuarioInputDTO, usuario, {});
-      if (validOrError.isLeft()) {
-        return left(validOrError.value);
-      }
       const result = await this.registerUsuarioUseCase.execute(usuario);
       if (result.isLeft()) {
         return left(result.value);

@@ -1,5 +1,5 @@
 import { UniqueEntityID } from "../../../core/domain/uniqueIdEntity";
-import { Either, Result, left, right } from "../../../core/logic/result";
+import { Either, Left, Result, Right, left, right } from "../../../core/logic/result";
 import { AppError } from "../../../core/shared/appError";
 import { Usuario } from "../../../domain/entities/usuario/usuario.entity";
 import { UsuarioMapper } from "../../../domain/mappers/usuario/usuario.mapper";
@@ -11,6 +11,10 @@ type Response = Either<AppError.UnexpectedError, Result<Usuario>>;
 
 export class UsuarioDBRepository implements UsuarioRepository {
   constructor() {}
+  
+  findByEmail(email: string): Promise<Left<AppError.UnexpectedError, Result<Usuario>> | Right<AppError.UnexpectedError, Result<Usuario>>> {
+    throw new Error("Method not implemented.");
+  }
 
   async findById(id: UniqueEntityID): Promise<Response> {
     try {

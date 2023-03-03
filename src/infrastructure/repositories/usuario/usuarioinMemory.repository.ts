@@ -12,7 +12,19 @@ export class UsuarioInMemoryRepository implements UsuarioRepository {
 
   async findById(id: UniqueEntityID): Promise<Response> {
     try {
-      const usuarioData = this.usuarios.find((usuario) => usuario.id === id);
+      const usuarioData = this.usuarios.find((usuario) => usuario.id.toString() === id.toString());
+      if (!usuarioData) {
+        return left(new UsuarioRepositoryErrors.UsuarioNotExists());
+      }
+      return right(Result.ok<Usuario>(usuarioData));
+    } catch (error) {
+      return left(new AppError.UnexpectedError(error));
+    }
+  }
+
+  async findByEmail(email: string): Promise<Response> {
+    try {
+      const usuarioData = this.usuarios.find((usuario) => usuario.email === email);
       if (!usuarioData) {
         return left(new UsuarioRepositoryErrors.UsuarioNotExists());
       }

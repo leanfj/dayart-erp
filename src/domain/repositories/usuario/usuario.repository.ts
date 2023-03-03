@@ -7,6 +7,7 @@ type Response = Either<AppError.UnexpectedError, Result<Usuario>>;
 
 export interface UsuarioRepository {
   findById(id: string | UniqueEntityID): Promise<Response>;
+  findByEmail(email: string): Promise<Response>;
   exists(id: string): Promise<boolean>;
   save(usuario: Usuario): Promise<Response>;
   update(id: string | UniqueEntityID, usuario: Usuario): Promise<Response>;

@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response, Router } from "express";
 
-import { BaseController } from "../interfaces/baseController";
-import { ClienteService } from "../services/cliente.service";
-import { UniqueEntityID } from "../../../core/domain/uniqueIdEntity";
-import { CreateClienteErrors } from "../../../application/useCases/cliente/createCliente/createClienteErrors";
-import { GetAllClienteErrors } from "../../../application/useCases/cliente/getAllCliente/getAllClienteErrors";
-import { UpdateClienteErrors } from "../../../application/useCases/cliente/updateCliente/updateClienteErrors";
-import { DeleteClienteErrors } from "../../../application/useCases/cliente/deleteCliente/deleteClienteErrors";
-import { ValidatorDTOErrors } from "../../../core/domain/validatorDTOErros";
+import { BaseController } from "../../interfaces/baseController";
+import { ClienteService } from "../../services/cliente/cliente.service";
+import { UniqueEntityID } from "../../../../core/domain/uniqueIdEntity";
+import { CreateClienteErrors } from "../../../../application/useCases/cliente/createCliente/createClienteErrors";
+import { GetAllClienteErrors } from "../../../../application/useCases/cliente/getAllCliente/getAllClienteErrors";
+import { UpdateClienteErrors } from "../../../../application/useCases/cliente/updateCliente/updateClienteErrors";
+import { DeleteClienteErrors } from "../../../../application/useCases/cliente/deleteCliente/deleteClienteErrors";
+import { ValidatorDTOErrors } from "../../../../core/domain/validatorDTOErros";
 
 export class ClienteController extends BaseController {
   public path = "/clientes";

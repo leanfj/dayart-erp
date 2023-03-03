@@ -7,26 +7,19 @@ import {
   Sequelize,
 } from "sequelize";
 
-export class ClienteModel extends Model<
-  InferAttributes<ClienteModel>,
-  InferCreationAttributes<ClienteModel>
+export class UsuarioModel extends Model<
+  InferAttributes<UsuarioModel>,
+  InferCreationAttributes<UsuarioModel>
 > {
   declare id: CreationOptional<string>;
   declare nome: string | null;
   declare email: string | null;
-  declare genero: string | null;
-  declare telefone: string | null;
-  declare endereco: string | null;
-  declare cidade: string | null;
-  declare estado: string | null;
-  declare cep: string | null;
-  declare cpf: string | null;
-  declare dataEvento: Date | null;
+  declare password: string | null;
   declare dataCadastro: CreationOptional<Date | null>;
   declare dataAtualizacao: CreationOptional<Date | null>;
 
-  static initModel(sequelize: Sequelize): typeof ClienteModel {
-    ClienteModel.init(
+  static initModel(sequelize: Sequelize): typeof UsuarioModel {
+    UsuarioModel.init(
       {
         id: {
           type: DataTypes.UUID,
@@ -41,29 +34,8 @@ export class ClienteModel extends Model<
         email: {
           type: DataTypes.STRING(255),
         },
-        genero: {
+        password: {
           type: DataTypes.STRING(255),
-        },
-        telefone: {
-          type: DataTypes.STRING(255),
-        },
-        endereco: {
-          type: DataTypes.STRING(255),
-        },
-        cidade: {
-          type: DataTypes.STRING(254),
-        },
-        estado: {
-          type: DataTypes.STRING(255),
-        },
-        cep: {
-          type: DataTypes.STRING(255),
-        },
-        cpf: {
-          type: DataTypes.STRING(255),
-        },
-        dataEvento: {
-          type: DataTypes.DATE,
         },
         dataCadastro: {
           type: "TIMESTAMP",
@@ -80,13 +52,13 @@ export class ClienteModel extends Model<
       },
       {
         sequelize,
-        tableName: "clientes",
+        tableName: "usuarios",
         timestamps: true,
         createdAt: "dataCadastro",
         updatedAt: "dataAtualizacao",
       }
     );
 
-    return ClienteModel;
+    return UsuarioModel;
   }
 }

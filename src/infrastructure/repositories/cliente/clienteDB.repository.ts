@@ -63,15 +63,10 @@ export class ClienteDBRepository implements ClienteRepository {
     try {
       const newCliente = ClienteMapper.toDomain(cliente);
 
-      
-      const clienteData = await ClienteModel.create({
+      await ClienteModel.create({
         ...ClienteMapper.toPersistence(newCliente),
         dataCadastro: new Date(),
       });
-
-      if (!clienteData) {
-        return left(new ClienteRepositoryErrors.ClienteNotExists());
-      }
 
       return right(Result.ok<Cliente>(newCliente));
     } catch (error) {
@@ -87,20 +82,13 @@ export class ClienteDBRepository implements ClienteRepository {
         return left(new ClienteRepositoryErrors.ClienteNotExists());
       }
 
-      await ClienteModel.update(
-        ClienteMapper.toPersistence(input),
-        {
-          where: {
-            id: id.toString(),
-          },
-        }
-      );
+      await ClienteModel.update(ClienteMapper.toPersistence(input), {
+        where: {
+          id: id.toString(),
+        },
+      });
 
-      return right(
-        Result.ok<Cliente>(
-         ClienteMapper.toDomain(input)
-        )
-      );
+      return right(Result.ok<Cliente>(ClienteMapper.toDomain(input)));
     } catch (error) {
       return left(new AppError.UnexpectedError(error));
     }

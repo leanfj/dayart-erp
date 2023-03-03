@@ -1,14 +1,14 @@
-import { CreateClienteUseCase } from "../../../application/useCases/cliente/createCliente/createCliente.useCase";
-import { DeleteClienteUseCase } from "../../../application/useCases/cliente/deleteCliente/deleteCliente.useCase";
-import { GetAllClienteUseCase } from "../../../application/useCases/cliente/getAllCliente/getAllCliente.usecase";
-import { UpdateClienteUseCase } from "../../../application/useCases/cliente/updateCliente/updateCliente.useCase";
-import { UniqueEntityID } from "../../../core/domain/uniqueIdEntity";
-import { validatorDto } from "../../../core/domain/validatorDTO";
-import { Either, Result, left, right } from "../../../core/logic/result";
-import { AppError } from "../../../core/shared/appError";
-import { ClienteInputDTO } from "../../../domain/DTOS/cliente/cliente.dto";
-import { Cliente } from "../../../domain/entities/cliente/cliente.entity";
-import { ClienteRepository } from "../../../domain/repositories/cliente/cliente.repository";
+import { CreateClienteUseCase } from "../../../../application/useCases/cliente/createCliente/createCliente.useCase";
+import { DeleteClienteUseCase } from "../../../../application/useCases/cliente/deleteCliente/deleteCliente.useCase";
+import { GetAllClienteUseCase } from "../../../../application/useCases/cliente/getAllCliente/getAllCliente.usecase";
+import { UpdateClienteUseCase } from "../../../../application/useCases/cliente/updateCliente/updateCliente.useCase";
+import { UniqueEntityID } from "../../../../core/domain/uniqueIdEntity";
+import { validatorDto } from "../../../../core/domain/validatorDTO";
+import { Either, Result, left, right } from "../../../../core/logic/result";
+import { AppError } from "../../../../core/shared/appError";
+import { ClienteInputDTO } from "../../../../domain/DTOS/cliente/cliente.dto";
+import { Cliente } from "../../../../domain/entities/cliente/cliente.entity";
+import { ClienteRepository } from "../../../../domain/repositories/cliente/cliente.repository";
 
 type Response = Either<AppError.UnexpectedError, Result<Cliente[] | Cliente>>;
 

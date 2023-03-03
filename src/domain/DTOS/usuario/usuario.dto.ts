@@ -1,6 +1,6 @@
-import { IsEmail, IsNotEmpty  } from "class-validator";
+import { IsEmail, IsNotEmpty, IsStrongPassword } from "class-validator";
 
-export class ClienteInputDTO {
+export class UsuarioInputDTO {
   id?: string;
 
   @IsNotEmpty()
@@ -11,6 +11,13 @@ export class ClienteInputDTO {
   email: string;
 
   @IsNotEmpty()
+  @IsStrongPassword({
+    minLength: 8,
+    minLowercase: 1,
+    minUppercase: 1,
+    minNumbers: 1,
+    minSymbols: 1,
+  })
   password: string;
 
   dataCadastro?: Date;

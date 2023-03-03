@@ -3,9 +3,12 @@ import "dotenv/config";
 import App from "./app";
 import colors from "colors/safe";
 import { Database } from "../database/sequelize";
-import { ClienteController } from "./controllers/cliente.controller";
-import { ClienteService } from "./services/cliente.service";
+import { ClienteController } from "./controllers/cliente/cliente.controller";
+import { UsuarioController } from "./controllers/usuario/usuario.controller";
+import { ClienteService } from "./services/cliente/cliente.service";
+import { UsuarioService } from "./services/usuario/usuario.service";
 import { ClienteDBRepository } from "../repositories/cliente/clienteDB.repository";
+import { UsuarioDBRepository } from "../repositories/usuario/usuarioDB.repository";
 
 (async () => {
   const dataBase = new Database();
@@ -16,6 +19,7 @@ import { ClienteDBRepository } from "../repositories/cliente/clienteDB.repositor
   
   const app = new App([
     new ClienteController(new ClienteService(new ClienteDBRepository())),
+    new UsuarioController(new UsuarioService(new UsuarioDBRepository()))
   ]);
 
   const server = app.listen();

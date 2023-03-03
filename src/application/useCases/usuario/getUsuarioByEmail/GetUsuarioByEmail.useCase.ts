@@ -22,7 +22,7 @@ export class GetUsuarioByEmailUseCase
         return left(new GetUsuarioByEmailErrors.UsuarioNotExists());
       }
 
-      return right(Result.ok<Usuario>(UsuarioMapper.toDomain(usuario)));
+      return right(Result.ok<Usuario>(usuario.value.getValue()));
     } catch (error) {
       return left(new AppError.UnexpectedError(error));
     }

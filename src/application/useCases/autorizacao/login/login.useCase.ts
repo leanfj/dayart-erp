@@ -6,32 +6,25 @@ import { Either, Result, left, right } from "../../../../core/logic/result";
 import { AppError } from "../../../../core/shared/appError";
 import { LoginInputDTO } from "../../../../domain/DTOS/login/loginInputDTO";
 import { Usuario } from "../../../../domain/entities/usuario/usuario.entity";
-import { UsuarioRepository } from "../../../../domain/repositories/usuario/usuario.repository";
 import { LoginErrors } from "./loginErrors";
 
 type Response = Either<AppError.UnexpectedError, Result<string>>;
 
-export class LoginUseCase implements UseCase<LoginInputDTO, Promise<Response>> {
-  constructor(private usuarioRepository: UsuarioRepository) {}
+export class LoginUseCase implements UseCase<{input: LoginInputDTO, usuario: Usuario}, Promise<Response>> {
+  constructor() {}
 
-  async execute(input: LoginInputDTO): Promise<Response> {
+  async execute(request: {input: LoginInputDTO, usuario: Usuario}): Promise<Response> {
     try {
-      const usuario = await this.usuarioRepository.findByEmail(input.email);
+      const { input: input, usuario } = request;
 
-      if (usuario.isLeft()) {
-        return left(new LoginErrors.PasswordOrEmailIncorrect());
-      }
-
-      const usuarioData = usuario.value.getValue() as Usuario;
-
-      const chekPassword = await compare(input.password, usuarioData.password);
+      const chekPassword = await compare(input.password, usuario.password);
 
       if (!chekPassword) {
         return left(new LoginErrors.PasswordOrEmailIncorrect());
       }
 
       const { JWT_SECRET } = process.env;
-      const token = sign({ id: usuarioData.id.toString() }, JWT_SECRET, {
+      const token = sign({ id: usuario.id.toString() }, JWT_SECRET, {
         expiresIn: "1d",
       });
 

@@ -12,8 +12,24 @@ type Response = Either<AppError.UnexpectedError, Result<Usuario>>;
 export class UsuarioDBRepository implements UsuarioRepository {
   constructor() {}
   
-  findByEmail(email: string): Promise<Left<AppError.UnexpectedError, Result<Usuario>> | Right<AppError.UnexpectedError, Result<Usuario>>> {
-    throw new Error("Method not implemented.");
+  async findByEmail(email: string): Promise<Left<AppError.UnexpectedError, Result<Usuario>> | Right<AppError.UnexpectedError, Result<Usuario>>> {
+    try {
+      const usuarioData = await UsuarioModel.findOne({
+        where: {
+          email: email,
+        },
+      });
+
+      if (!usuarioData) {
+        return left(new UsuarioRepositoryErrors.UsuarioNotExists());
+      }
+
+      const usuario = UsuarioMapper.toDomain(usuarioData);
+
+      return right(Result.ok<Usuario>(usuario));
+    } catch (error) {
+      return left(new AppError.UnexpectedError(error));
+    }
   }
 
   async findById(id: UniqueEntityID): Promise<Response> {

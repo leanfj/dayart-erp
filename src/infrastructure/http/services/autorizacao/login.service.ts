@@ -1,56 +1,35 @@
-import { GetUsuarioByEmailUseCase } from "../../../../application/useCases/usuario/getUsuarioByEmail/GetUsuarioByEmail.useCase";
-import { RegisterUsuarioUseCase } from "../../../../application/useCases/usuario/registerUsuario/registerUsuario.useCase";
+import { LoginUseCase } from "../../../../application/useCases/autorizacao/login/login.useCase";
 // import { DeleteClienteUseCase } from "../../../../application/useCases/cliente/deleteCliente/deleteCliente.useCase";
 // import { GetAllClienteUseCase } from "../../../../application/useCases/cliente/getAllCliente/getAllCliente.usecase";
 // import { UpdateClienteUseCase } from "../../../../application/useCases/cliente/updateCliente/updateCliente.useCase";
 // import { UniqueEntityID } from "../../../../core/domain/uniqueIdEntity";
 import { Either, Result, left, right } from "../../../../core/logic/result";
 import { AppError } from "../../../../core/shared/appError";
-import { UsuarioInputDTO } from "../../../../domain/DTOS/usuario/usuario.dto";
+import { LoginInputDTO } from "../../../../domain/DTOS/login/loginInputDTO";
 import { Usuario } from "../../../../domain/entities/usuario/usuario.entity";
-import { UsuarioRepository } from "../../../../domain/repositories/usuario/usuario.repository";
 
-type Response = Either<AppError.UnexpectedError, Result<Usuario>>;
+type Response = Either<AppError.UnexpectedError, Result<string>>;
 
-export class UsuarioService {
-  private registerUsuarioUseCase: RegisterUsuarioUseCase;
-  private getUsuarioByEmailUseCase: GetUsuarioByEmailUseCase;
+export class LoginService {
+  private loginUseCase: LoginUseCase;
   // private updateClienteUseCase: UpdateClienteUseCase;
   // private getAllClienteUseCase: GetAllClienteUseCase;
   // private deleteClienteUseCase: DeleteClienteUseCase;
 
-  constructor(readonly usuarioRepository: UsuarioRepository) {
-    this.registerUsuarioUseCase = new RegisterUsuarioUseCase(usuarioRepository);
-    this.getUsuarioByEmailUseCase = new GetUsuarioByEmailUseCase(
-      usuarioRepository
-    );
+  constructor() {
+    this.loginUseCase = new LoginUseCase();
     // this.updateClienteUseCase = new UpdateClienteUseCase(clienteRepository);
     // this.getAllClienteUseCase = new GetAllClienteUseCase(clienteRepository);
     // this.deleteClienteUseCase = new DeleteClienteUseCase(clienteRepository);
   }
 
-  public async create(usuario: UsuarioInputDTO): Promise<Response> {
+  public async login(input: LoginInputDTO, usuario: Usuario): Promise<Response> {
     try {
-      const result = await this.registerUsuarioUseCase.execute(usuario);
+      const result = await this.loginUseCase.execute({input, usuario});
       if (result.isLeft()) {
         return left(result.value);
       } else {
-        return right(Result.ok<Usuario>(result.value.getValue() as Usuario));
-      }
-    } catch (error) {
-      return left(new AppError.UnexpectedError(error));
-    }
-  }
-
-  public async getByEmail(email: string): Promise<Response> {
-    try {
-      const result = await this.getUsuarioByEmailUseCase.execute(email);
-
-      if (result.isLeft()) {
-        return left(result.value);
-      } else {
-        const usuario = result.value.getValue();
-        return right(Result.ok<Usuario>(usuario));
+        return right(Result.ok<string>(result.value.getValue() as string));
       }
     } catch (error) {
       return left(new AppError.UnexpectedError(error));

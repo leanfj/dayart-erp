@@ -4,27 +4,33 @@ import { UsuarioInMemoryRepository } from "../../../../infrastructure/repositori
 import { LoginUseCase } from "../login/login.useCase";
 import { RegisterUsuarioUseCase } from "../../usuario/registerUsuario/registerUsuario.useCase";
 import { LoginInputDTO } from "domain/DTOS/login/loginInputDTO";
+import { GetUsuarioByEmailUseCase } from "application/useCases/usuario/getUsuarioByEmail/GetUsuarioByEmail.useCase";
 
 describe("LoginUseCase", () => {
   it("should return a valid token", async () => {
     const usuarioRepository = new UsuarioInMemoryRepository();
     const registerUsuariouseCase = new RegisterUsuarioUseCase(usuarioRepository);
-    const loginUseCase = new LoginUseCase(usuarioRepository);
+    const getUsuarioByEmail = new GetUsuarioByEmailUseCase(usuarioRepository);
+    const loginUseCase = new LoginUseCase();
 
-    const input: UsuarioInputDTO = {
+    const usuarioInput: UsuarioInputDTO = {
       nome: "Leandro",
       email: "leandro@email.com",
       password: "leanBIO!0",
     };
 
-    await registerUsuariouseCase.execute(input);
+    await registerUsuariouseCase.execute(usuarioInput);
 
-    const loginInput: LoginInputDTO = {
+    const input: LoginInputDTO = {
       email: "leandro@email.com",
       password: "leanBIO!0",
     }
 
-    const token = await loginUseCase.execute(loginInput);
+    const usarioOrError = await getUsuarioByEmail.execute(input.email);
+
+    const usuario = usarioOrError.value as unknown as Usuario;
+
+    const token = await loginUseCase.execute({input, usuario});
 
     expect(token.isRight()).toBeTruthy();
   });

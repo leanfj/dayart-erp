@@ -80,7 +80,7 @@ export class AutorizacaoController extends BaseController {
         ) {
           return this.unauthorized(
             response,
-            new LoginErrors.PasswordOrEmailIncorrect().getValue().message
+            new LoginErrors.PasswordOrEmailIncorrect().getErrorValue().message
           );
         }
       } else {
@@ -95,7 +95,7 @@ export class AutorizacaoController extends BaseController {
           );
         }
 
-        return this.ok(response, {token: loginOrError.value.getValue()});
+        return this.ok(response, loginOrError.value.getValue());
       }
     } catch (err) {
       return this.fail(response, err);

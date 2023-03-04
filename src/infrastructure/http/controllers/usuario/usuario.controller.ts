@@ -5,6 +5,7 @@ import { UsuarioService } from "../../services/usuario/usuario.service";
 // import { UniqueEntityID } from "../../../../core/domain/uniqueIdEntity";
 import { RegisterUsuarioErrors } from "../../../../application/useCases/usuario/registerUsuario/registerUsuarioErrors";
 import { ValidatorDTOErrors } from "../../../../core/domain/validatorDTOErros";
+import { ensureAuthenticated } from "../../../http/middlewares/ensureAuthenticated.middleware";
 
 export class UsuarioController extends BaseController {
   public path = "/usuarios";
@@ -21,11 +22,12 @@ export class UsuarioController extends BaseController {
       (request: Request, response: Response, next: NextFunction) =>
         this.create(request, response, next)
     );
-    // this.router.get(
-    //   `${this.path}`,
-    //   (request: Request, response: Response, next: NextFunction) =>
-    //     this.getAll(request, response, next)
-    // );
+    this.router.get(
+      `${this.path}/:id`,
+      ensureAuthenticated(),
+      (request: Request, response: Response, next: NextFunction) =>
+        this.getUserById(request, response, next)
+    );
 
     // this.router.patch(
     //   `${this.path}/:id`,
@@ -70,6 +72,29 @@ export class UsuarioController extends BaseController {
         return this.fail(response, result.value.getErrorValue().message);
       } else {
         return this.created(response);
+      }
+    } catch (err) {
+      return this.fail(response, err);
+    }
+  }
+
+
+  async getUserById(request: Request, response: Response, next: NextFunction) {
+    const {id} = request.params;
+
+    try {
+      const result = await this.usuarioService.getById(id);
+
+      if (result.isLeft()) {
+        if (result.value instanceof RegisterUsuarioErrors.UsuarioAlreadyExists) {
+          return this.conflict(response, result.value.getErrorValue().message);
+        }
+        if (result.value instanceof ValidatorDTOErrors.ValidatorErrors) {
+          return this.invalidInput(response, result.value.getErrorValue().message);
+        }
+        return this.fail(response, result.value.getErrorValue().message);
+      } else {
+        return this.ok(response, result.value.getValue());
       }
     } catch (err) {
       return this.fail(response, err);

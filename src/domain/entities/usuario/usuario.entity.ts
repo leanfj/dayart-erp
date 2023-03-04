@@ -5,7 +5,7 @@ type UsuarioProps = {
   id?: string;
   nome: string;
   email: string;
-  password: string;
+  password?: string;
   dataCadastro?: Date;
   dataAtualizacao?: Date;
 };

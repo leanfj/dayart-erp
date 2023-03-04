@@ -1,4 +1,4 @@
-import "dotenv/config";
+// import "dotenv/config";
 
 import App from "./app";
 import colors from "colors/safe";

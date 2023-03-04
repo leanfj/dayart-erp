@@ -8,6 +8,7 @@ import { GetAllClienteErrors } from "../../../../application/useCases/cliente/ge
 import { UpdateClienteErrors } from "../../../../application/useCases/cliente/updateCliente/updateClienteErrors";
 import { DeleteClienteErrors } from "../../../../application/useCases/cliente/deleteCliente/deleteClienteErrors";
 import { ValidatorDTOErrors } from "../../../../core/domain/validatorDTOErros";
+import { ensureAuthenticated } from "../../../http/middlewares/ensureAuthenticated.middleware";
 
 export class ClienteController extends BaseController {
   public path = "/clientes";
@@ -26,6 +27,7 @@ export class ClienteController extends BaseController {
     );
     this.router.get(
       `${this.path}`,
+      ensureAuthenticated(),
       (request: Request, response: Response, next: NextFunction) =>
         this.getAll(request, response, next)
     );
@@ -80,7 +82,10 @@ export class ClienteController extends BaseController {
           return this.conflict(response, result.value.getErrorValue().message);
         }
         if (result.value instanceof ValidatorDTOErrors.ValidatorErrors) {
-          return this.invalidInput(response, result.value.getErrorValue().message);
+          return this.invalidInput(
+            response,
+            result.value.getErrorValue().message
+          );
         }
         return this.fail(response, result.value.getErrorValue().message);
       } else {

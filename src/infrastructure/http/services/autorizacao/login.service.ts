@@ -8,7 +8,7 @@ import { AppError } from "../../../../core/shared/appError";
 import { LoginInputDTO } from "../../../../domain/DTOS/login/loginInputDTO";
 import { Usuario } from "../../../../domain/entities/usuario/usuario.entity";
 
-type Response = Either<AppError.UnexpectedError, Result<string>>;
+type Response = Either<AppError.UnexpectedError, Result<{token: string, usuarioId: string}>>;
 
 export class LoginService {
   private loginUseCase: LoginUseCase;
@@ -29,7 +29,7 @@ export class LoginService {
       if (result.isLeft()) {
         return left(result.value);
       } else {
-        return right(Result.ok<string>(result.value.getValue() as string));
+        return right(Result.ok<{token: string, usuarioId: string}>(result.value.getValue()));
       }
     } catch (error) {
       return left(new AppError.UnexpectedError(error));

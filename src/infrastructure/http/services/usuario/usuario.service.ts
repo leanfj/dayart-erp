@@ -1,3 +1,4 @@
+import { GetUsuarioByIdUseCase } from "../../../../application/useCases/usuario/getUsuarioById/GetUsuarioById.useCase";
 import { GetUsuarioByEmailUseCase } from "../../../../application/useCases/usuario/getUsuarioByEmail/GetUsuarioByEmail.useCase";
 import { RegisterUsuarioUseCase } from "../../../../application/useCases/usuario/registerUsuario/registerUsuario.useCase";
 // import { DeleteClienteUseCase } from "../../../../application/useCases/cliente/deleteCliente/deleteCliente.useCase";
@@ -15,6 +16,7 @@ type Response = Either<AppError.UnexpectedError, Result<Usuario>>;
 export class UsuarioService {
   private registerUsuarioUseCase: RegisterUsuarioUseCase;
   private getUsuarioByEmailUseCase: GetUsuarioByEmailUseCase;
+  private getUsuarioByIdUseCase: GetUsuarioByIdUseCase;
   // private updateClienteUseCase: UpdateClienteUseCase;
   // private getAllClienteUseCase: GetAllClienteUseCase;
   // private deleteClienteUseCase: DeleteClienteUseCase;
@@ -22,6 +24,9 @@ export class UsuarioService {
   constructor(readonly usuarioRepository: UsuarioRepository) {
     this.registerUsuarioUseCase = new RegisterUsuarioUseCase(usuarioRepository);
     this.getUsuarioByEmailUseCase = new GetUsuarioByEmailUseCase(
+      usuarioRepository
+    );
+    this.getUsuarioByIdUseCase = new GetUsuarioByIdUseCase(
       usuarioRepository
     );
     // this.updateClienteUseCase = new UpdateClienteUseCase(clienteRepository);
@@ -45,6 +50,21 @@ export class UsuarioService {
   public async getByEmail(email: string): Promise<Response> {
     try {
       const result = await this.getUsuarioByEmailUseCase.execute(email);
+
+      if (result.isLeft()) {
+        return left(result.value);
+      } else {
+        const usuario = result.value.getValue();
+        return right(Result.ok<Usuario>(usuario));
+      }
+    } catch (error) {
+      return left(new AppError.UnexpectedError(error));
+    }
+  }
+
+  public async getById(id: string): Promise<Response> {
+    try {
+      const result = await this.getUsuarioByIdUseCase.execute(id);
 
       if (result.isLeft()) {
         return left(result.value);

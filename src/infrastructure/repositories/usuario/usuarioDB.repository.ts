@@ -12,11 +12,32 @@ type Response = Either<AppError.UnexpectedError, Result<Usuario>>;
 export class UsuarioDBRepository implements UsuarioRepository {
   constructor() {}
   
-  async findByEmail(email: string): Promise<Left<AppError.UnexpectedError, Result<Usuario>> | Right<AppError.UnexpectedError, Result<Usuario>>> {
+  async findByEmail(email: string): Promise<Response> {
     try {
       const usuarioData = await UsuarioModel.findOne({
         where: {
           email: email,
+        },
+      });
+
+      if (!usuarioData) {
+        return left(new UsuarioRepositoryErrors.UsuarioNotExists());
+      }
+
+      const usuario = UsuarioMapper.toDomain(usuarioData);
+
+      return right(Result.ok<Usuario>(usuario));
+    } catch (error) {
+      return left(new AppError.UnexpectedError(error));
+    }
+  }
+
+  async findActivedByEmail(email: string): Promise<Response> {
+    try {
+      const usuarioData = await UsuarioModel.findOne({
+        where: {
+          email: email,
+          isActive: true
         },
       });
 

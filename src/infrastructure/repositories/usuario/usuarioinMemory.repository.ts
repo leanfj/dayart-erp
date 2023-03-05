@@ -1,5 +1,6 @@
+import { UsuarioMapper } from "../../../domain/mappers/usuario/usuario.mapper";
 import { UniqueEntityID } from "../../../core/domain/uniqueIdEntity";
-import { Either, Result, left, right } from "../../../core/logic/result";
+import { Either, Left, Result, Right, left, right } from "../../../core/logic/result";
 import { AppError } from "../../../core/shared/appError";
 import { Usuario } from "../../../domain/entities/usuario/usuario.entity";
 import { UsuarioRepository } from "../../../domain/repositories/usuario/usuario.repository";
@@ -8,6 +9,7 @@ import { UsuarioRepositoryErrors } from "./usuarioRepositoryErrors";
 type Response = Either<AppError.UnexpectedError, Result<Usuario>>;
 
 export class UsuarioInMemoryRepository implements UsuarioRepository {
+
   private usuarios: Usuario[] = [];
 
   async findById(id: UniqueEntityID): Promise<Response> {
@@ -34,6 +36,18 @@ export class UsuarioInMemoryRepository implements UsuarioRepository {
     }
   }
 
+  async findActivedByEmail(email: string): Promise<Response> {
+    try {
+      const usuarioData = this.usuarios.find((usuario) => usuario.email === email && usuario.isActive);
+      if (!usuarioData) {
+        return left(new UsuarioRepositoryErrors.UsuarioNotExists());
+      }
+      return right(Result.ok<Usuario>(UsuarioMapper.toDomain(usuarioData)));
+    } catch (error) {
+      return left(new AppError.UnexpectedError(error));
+    }
+  }
+
   async exists(email: string): Promise<boolean> {
     const usuario = this.usuarios.find((usuario) => usuario.email === email);
 
@@ -51,6 +65,7 @@ export class UsuarioInMemoryRepository implements UsuarioRepository {
           nome: usuario.nome,
           email: usuario.email,
           password: usuario.password,
+          isActive: usuario.isActive || false,
           dataCadastro: usuario.dataCadastro || new Date(),
         },
         usuario.id

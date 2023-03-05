@@ -9,6 +9,7 @@ export abstract class UsuarioMapper implements Mapper<Usuario> {
         nome: raw.nome,
         email: raw.email,
         password: raw.password,
+        isActive: raw.isActive,
       },
       new UniqueEntityID(raw.id)
     );
@@ -21,6 +22,7 @@ export abstract class UsuarioMapper implements Mapper<Usuario> {
       nome: usuario.nome,
       email: usuario.email,
       password: usuario.password,
+      is_active: usuario.isActive,
     };
   }
 }

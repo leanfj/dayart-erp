@@ -1,4 +1,4 @@
-import { validatorDto } from "../../../../core/domain/validatorDTO";
+import { validatorDTO } from "../../../../core/domain/validatorDTO";
 import { UseCase } from "../../../../core/application/useCase";
 import { Either, Result, left, right } from "../../../../core/logic/result";
 import { AppError } from "../../../../core/shared/appError";
@@ -16,7 +16,7 @@ export class RegisterUsuarioUseCase
   constructor(private usuarioRepository: UsuarioRepository) {}
 
   async execute(input: UsuarioInputDTO): Promise<Response> {
-    const validOrError = await validatorDto(UsuarioInputDTO, input, {});
+    const validOrError = await validatorDTO(UsuarioInputDTO, input, {});
     if (validOrError.isLeft()) {
       return left(validOrError.value);
     }
@@ -38,6 +38,7 @@ export class RegisterUsuarioUseCase
         nome: input.nome,
         email: input.email,
         password: passwordHash,
+        isActive: input.isActive,
         dataCadastro: new Date(),
       });
 

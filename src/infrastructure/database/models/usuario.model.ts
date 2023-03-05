@@ -15,6 +15,7 @@ export class UsuarioModel extends Model<
   declare nome: string | null;
   declare email: string | null;
   declare password: string | null;
+  declare isActive: boolean | null;
   declare dataCadastro: CreationOptional<Date | null>;
   declare dataAtualizacao: CreationOptional<Date | null>;
 
@@ -36,6 +37,11 @@ export class UsuarioModel extends Model<
         },
         password: {
           type: DataTypes.STRING(255),
+        },
+        isActive: {
+          type: DataTypes.BOOLEAN,
+          defaultValue: false,
+          allowNull: true,
         },
         dataCadastro: {
           type: "TIMESTAMP",

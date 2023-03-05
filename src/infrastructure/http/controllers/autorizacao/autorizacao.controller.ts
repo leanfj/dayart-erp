@@ -1,17 +1,22 @@
 import { NextFunction, Request, Response, Router } from "express";
 
+import { Usuario } from "../../../../domain/entities/usuario/usuario.entity";
+// import { UniqueEntityID } from "../../../../core/domain/uniqueIdEntity";
+
+import { validatorDTO } from "../../../../core/domain/validatorDTO";
+import { LoginInputDTO } from "../../../../domain/DTOS/login/loginInputDTO";
+
 import { BaseController } from "../../interfaces/baseController";
+
 import { UsuarioService } from "../../services/usuario/usuario.service";
 import { LoginService } from "../../../http/services/autorizacao/login.service";
-// import { UniqueEntityID } from "../../../../core/domain/uniqueIdEntity";
-import { RegisterUsuarioErrors } from "../../../../application/useCases/usuario/registerUsuario/registerUsuarioErrors";
-import { ValidatorDTOErrors } from "../../../../core/domain/validatorDTOErros";
-import { validatorDto } from "../../../../core/domain/validatorDTO";
-import { LoginInputDTO } from "../../../../domain/DTOS/login/loginInputDTO";
-import { left } from "../../../../core/logic/result";
-import { GetUsuarioByEmailErrors } from "../../../../application/useCases/usuario/getUsuarioByEmail/GetUsuarioByEmailErrors";
-import { Usuario } from "../../../../domain/entities/usuario/usuario.entity";
+
+// import { ValidatorDTOErrors } from "../../../../core/domain/validatorDTOErros";
+// import { left } from "../../../../core/logic/result";
+
 import { LoginErrors } from "../../../../application/useCases/autorizacao/login/loginErrors";
+import { GetUsuarioByEmailErrors } from "../../../../application/useCases/usuario/getUsuarioByEmail/GetUsuarioByEmailErrors";
+import { GetActivedUsuarioByEmailErrors } from "../../../../application/useCases/usuario/getActivedUsuarioByEmail/GetActivedUsuarioByEmailErrors";
 
 export class AutorizacaoController extends BaseController {
   public path = "/autorizacao";
@@ -63,7 +68,7 @@ export class AutorizacaoController extends BaseController {
   async login(request: Request, response: Response, next: NextFunction) {
     const login = request.body;
 
-    const validOrError = await validatorDto(LoginInputDTO, login, {});
+    const validOrError = await validatorDTO(LoginInputDTO, login, {});
     if (validOrError.isLeft()) {
       return this.invalidInput(
         response,
@@ -72,7 +77,9 @@ export class AutorizacaoController extends BaseController {
     }
 
     try {
-      const usuarioOrError = await this.usuarioService.getByEmail(login.email);
+      const usuarioOrError = await this.usuarioService.getActivedByEmail(
+        login.email
+      );
       if (usuarioOrError.isLeft()) {
         if (
           usuarioOrError.value instanceof
@@ -80,7 +87,17 @@ export class AutorizacaoController extends BaseController {
         ) {
           return this.unauthorized(
             response,
-            new LoginErrors.PasswordOrEmailIncorrect().getErrorValue().message
+            usuarioOrError.value.getErrorValue().message
+          );
+        }
+
+        if (
+          usuarioOrError.value instanceof
+          GetActivedUsuarioByEmailErrors.UsuarioNotActived
+        ) {
+          return this.unauthorized(
+            response,
+            usuarioOrError.value.getErrorValue().message
           );
         }
       } else {

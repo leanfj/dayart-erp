@@ -4,7 +4,7 @@ import { Either, Result, left, right } from "../logic/result";
 import { AppError } from "../shared/appError";
 import { ValidatorDTOErrors } from "./validatorDTOErros";
 type Response = Either<AppError.UnexpectedError,  Result<any>>;
-export const validatorDto = async <T extends ClassConstructor<any>>(
+export const validatorDTO = async <T extends ClassConstructor<any>>(
   dto: T,
   obj: Object,
   opt: ValidatorOptions

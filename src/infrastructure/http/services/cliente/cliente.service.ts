@@ -3,7 +3,7 @@ import { DeleteClienteUseCase } from "../../../../application/useCases/cliente/d
 import { GetAllClienteUseCase } from "../../../../application/useCases/cliente/getAllCliente/getAllCliente.usecase";
 import { UpdateClienteUseCase } from "../../../../application/useCases/cliente/updateCliente/updateCliente.useCase";
 import { UniqueEntityID } from "../../../../core/domain/uniqueIdEntity";
-import { validatorDto } from "../../../../core/domain/validatorDTO";
+import { validatorDTO } from "../../../../core/domain/validatorDTO";
 import { Either, Result, left, right } from "../../../../core/logic/result";
 import { AppError } from "../../../../core/shared/appError";
 import { ClienteInputDTO } from "../../../../domain/DTOS/cliente/cliente.dto";
@@ -27,7 +27,7 @@ export class ClienteService {
 
   public async create(cliente: ClienteInputDTO): Promise<Response> {
     try {
-      const validOrError = await validatorDto(ClienteInputDTO, cliente, {});
+      const validOrError = await validatorDTO(ClienteInputDTO, cliente, {});
       if (validOrError.isLeft()) {
         return left(validOrError.value);
       }
@@ -62,7 +62,7 @@ export class ClienteService {
     id: UniqueEntityID
   ): Promise<Response> {
     try {
-      const validOrError = await validatorDto(ClienteInputDTO, cliente, {skipMissingProperties: true});
+      const validOrError = await validatorDTO(ClienteInputDTO, cliente, {skipMissingProperties: true});
       if (validOrError.isLeft()) {
         return left(validOrError.value);
       }

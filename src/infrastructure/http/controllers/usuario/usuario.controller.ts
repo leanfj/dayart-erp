@@ -18,7 +18,7 @@ export class UsuarioController extends BaseController {
 
   private async initializeRoutes() {
     this.router.post(
-      `${this.path}/register`,
+      `${this.path}/cadastro`,
       (request: Request, response: Response, next: NextFunction) =>
         this.create(request, response, next)
     );

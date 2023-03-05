@@ -19,6 +19,7 @@ export class UsuarioInputDTO {
     minSymbols: 1,
   })
   password: string;
+  isActive?: boolean;
 
   dataCadastro?: Date;
   dataAtualizacao?: Date;

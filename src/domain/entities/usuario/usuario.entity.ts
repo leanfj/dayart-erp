@@ -6,6 +6,7 @@ type UsuarioProps = {
   nome: string;
   email: string;
   password?: string;
+  isActive?: boolean;
   dataCadastro?: Date;
   dataAtualizacao?: Date;
 };
@@ -37,6 +38,10 @@ export class Usuario extends Entity<UsuarioProps> {
 
   get dataAtualizacao(): Date {
     return this.props.dataAtualizacao;
+  }
+
+  get isActive(): boolean {
+    return this.props.isActive;
   }
 
   static create(props: UsuarioProps, id?: UniqueEntityID): Usuario {

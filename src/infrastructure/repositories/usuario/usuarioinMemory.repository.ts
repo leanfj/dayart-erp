@@ -10,6 +10,7 @@ type Response = Either<AppError.UnexpectedError, Result<Usuario>>;
 
 export class UsuarioInMemoryRepository implements UsuarioRepository {
 
+
   private usuarios: Usuario[] = [];
 
   async findById(id: UniqueEntityID): Promise<Response> {
@@ -86,6 +87,21 @@ export class UsuarioInMemoryRepository implements UsuarioRepository {
       }
       const usuario = this.usuarios[index];
       this.usuarios[index] = { ...usuario, ...input };
+      return right(Result.ok<Usuario>(this.usuarios[index]));
+    } catch (error) {
+      return left(new AppError.UnexpectedError(error));
+    }
+  }
+
+  async updatePassword(usuarioId: string |UniqueEntityID, passwordHash: string): Promise<Response> {
+    try {
+      const index = this.usuarios.findIndex((usuario) => usuario.id === usuarioId);
+      if (index === -1) {
+        return left(new UsuarioRepositoryErrors.UsuarioNotExists());
+      }
+      const usuario = this.usuarios[index];
+      usuario.props.password = passwordHash;
+      this.usuarios[index] = usuario;
       return right(Result.ok<Usuario>(this.usuarios[index]));
     } catch (error) {
       return left(new AppError.UnexpectedError(error));

@@ -6,6 +6,7 @@ import { Usuario } from "../../entities/usuario/usuario.entity";
 type Response = Either<AppError.UnexpectedError, Result<Usuario>>;
 
 export interface UsuarioRepository {
+  updatePassword(usuarioId: string, passwordHash: string): unknown;
   findById(id: string | UniqueEntityID): Promise<Response>;
   findByEmail(email: string): Promise<Response>;
   findActivedByEmail(email: string): Promise<Response>;

@@ -36,11 +36,16 @@ export class AutorizacaoController extends BaseController {
       (request: Request, response: Response, next: NextFunction) =>
         this.login(request, response, next)
     );
-    // this.router.get(
-    //   `${this.path}`,
-    //   (request: Request, response: Response, next: NextFunction) =>
-    //     this.getAll(request, response, next)
-    // );
+    this.router.post(
+      `${this.path}/requestResetPassword`,
+      (request: Request, response: Response, next: NextFunction) =>
+        this.requestResetPassword(request, response, next)
+    );
+    this.router.post(
+      `${this.path}/resetPassword`,
+      (request: Request, response: Response, next: NextFunction) =>
+        this.resetPassword(request, response, next)
+    );
 
     // this.router.patch(
     //   `${this.path}/:id`,
@@ -119,26 +124,47 @@ export class AutorizacaoController extends BaseController {
     }
   }
 
-  // async update(request: Request, response: Response, next: NextFunction) {
-  //   const cliente = request.body;
-  //   const id = request.params.id;
-  //   try {
-  //     const result = await this.clienteService.update(
-  //       cliente,
-  //       new UniqueEntityID(id)
-  //     );
-  //     if (result.isLeft()) {
-  //       if (result.value instanceof UpdateClienteErrors.ClienteNotExists) {
-  //         return this.notFound(response, result.value.getErrorValue().message);
-  //       }
-  //       return this.fail(response, result.value.getErrorValue().message);
-  //     } else {
-  //       return this.ok(response, cliente);
-  //     }
-  //   } catch (err) {
-  //     return this.fail(response, err);
-  //   }
-  // }
+  async requestResetPassword(
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ) {
+    const email = request.body;
+    try {
+      const result = await this.loginService.requestResetPassword(email.email);
+
+      if (result.isLeft()) {
+        return this.fail(response, result.value.getErrorValue().message);
+      } else {
+        return this.ok(response, null);
+      }
+    } catch (err) {
+      return this.fail(response, err);
+    }
+  }
+
+  async resetPassword(
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ) {
+    const input = request.body;
+    try {
+      const result = await this.loginService.resetPassword(
+        input.usuarioId,
+        input.token,
+        input.password
+      );
+
+      if (result.isLeft()) {
+        return this.fail(response, result.value.getErrorValue().message);
+      } else {
+        return this.ok(response, null);
+      }
+    } catch (err) {
+      return this.fail(response, err);
+    }
+  }
 
   // async delete(request: Request, response: Response, next: NextFunction) {
   //   const id = request.params.id;

@@ -22,11 +22,9 @@
     },   
   },
   "include": [
-    "src/infra/sequelize/**/*.js",
-    "src/infra/sequelize/**/*.ts",
-    "./src/**/*.js",
     "./src/**/*.ts",
     "./src/**/*.js",
+    "./src/**/*.handlebars",
   ],
   "exclude": [
     "node_modules",

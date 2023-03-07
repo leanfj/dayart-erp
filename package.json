@@ -9,7 +9,7 @@
     "start": "node dist/index.js",
     "test": "jest",
     "copy:templates": "cpx './src/infrastructure/email/template/**' 'dist/infrastructure/email/template/'",
-    "start:dev": "nodemon --exec ts-node -r tsconfig-paths/register src/index.ts",
+    "start:dev": "nodemon --exec ts-node src/index.ts",
     "migrate:dev": "NODE_ENV=development dotenv -e .env sequelize db:migrate",
     "migrate:test": "NODE_ENV=test dotenv -e .env sequelize db:migrate --env test",
     "migrate:prod": "sequelize db:migrate --env production"

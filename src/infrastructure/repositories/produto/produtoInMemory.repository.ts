@@ -6,7 +6,6 @@ import { Produto } from "../../../domain/entities/produto/produto.entity";
 import { ProdutoRepository } from "../../../domain/repositories/produto/produto.repository";
 import { ProdutoRepositoryErrors } from "./produtoRepositoryErrors";
 import { RandomCode } from "../../../domain/valueObjects/produto/randomCode";
-import { ProdutoInputDTO } from "domain/DTOS/produto/produto.dto";
 
 type Response = Either<AppError.UnexpectedError, Result<Produto | Produto[]>>;
 
@@ -44,7 +43,7 @@ export class ProdutoInMemoryRepository implements ProdutoRepository {
 
   async findById(id: UniqueEntityID): Promise<Response> {
     try {
-      const produtoData = this.produtos.find((produto) => produto.id === id);
+      const produtoData = this.produtos.find((produto) => produto.id.toString() === id.toString());
       if (!produtoData) {
         return left(new ProdutoRepositoryErrors.ProdutoNotExists());
       }
@@ -85,12 +84,11 @@ export class ProdutoInMemoryRepository implements ProdutoRepository {
 
   async update(id: UniqueEntityID, input: any): Promise<Response> {
     try {
-      const index = this.produtos.findIndex((produto) => produto.id === id);
+      const index = this.produtos.findIndex((produto) => produto.id.toString() === id.toString());
       if (index === -1) {
         return left(new ProdutoRepositoryErrors.ProdutoNotExists());
       }
-      const produto = this.produtos[index];
-      this.produtos[index] = { ...produto, ...input };
+      this.produtos[index] = input;
       return right(Result.ok<Produto>(this.produtos[index]));
     } catch (error) {
       return left(new AppError.UnexpectedError(error));
@@ -99,7 +97,7 @@ export class ProdutoInMemoryRepository implements ProdutoRepository {
 
   async delete(id: UniqueEntityID): Promise<Response> {
     try {
-      const index = this.produtos.findIndex((produto) => produto.id === id);
+      const index = this.produtos.findIndex((produto) => produto.id.toString() === id.toString());
       if (index === -1) {
         return left(new ProdutoRepositoryErrors.ProdutoNotExists());
       }

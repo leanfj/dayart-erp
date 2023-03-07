@@ -1,12 +1,12 @@
 import { UseCaseError } from "../../../../core/domain/useCaseError"
 import { Result } from "../../../../core/logic/result"
 
-export namespace UpdateClienteErrors {
+export namespace UpdateProdutoErrors {
 
-  export class ClienteNotExists extends Result<UseCaseError> {    
+  export class ProdutoNotExists extends Result<UseCaseError> {    
     constructor () {
       super(false, {
-        message: `The Cliente not exists`
+        message: `The Produto not exists`
       } as UseCaseError)
     }
   }

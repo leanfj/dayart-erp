@@ -3,8 +3,8 @@ import { UsuarioInputDTO } from "../../../../domain/DTOS/usuario/usuario.dto";
 import { UsuarioInMemoryRepository } from "../../../../infrastructure/repositories/usuario/usuarioinMemory.repository";
 import { LoginUseCase } from "../login/login.useCase";
 import { RegisterUsuarioUseCase } from "../../usuario/registerUsuario/registerUsuario.useCase";
-import { LoginInputDTO } from "domain/DTOS/login/loginInputDTO";
-import { GetUsuarioByEmailUseCase } from "application/useCases/usuario/getUsuarioByEmail/GetUsuarioByEmail.useCase";
+import { LoginInputDTO } from "../../../../domain/DTOS/login/loginInputDTO";
+import { GetUsuarioByEmailUseCase } from "../../../../application/useCases/usuario/getUsuarioByEmail/GetUsuarioByEmail.useCase";
 
 describe("LoginUseCase", () => {
   it("should return a valid token", async () => {

@@ -1,4 +1,4 @@
-import { TokenModel } from "../../../infrastructure/database/models/token.model";
+import { TokenModel } from "../../database/models";
 import { UniqueEntityID } from "../../../core/domain/uniqueIdEntity";
 import {
   Either,

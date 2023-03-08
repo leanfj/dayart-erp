@@ -30,7 +30,7 @@ export abstract class ProdutoMapper implements Mapper<Produto> {
         valorCusto: produto.valorCusto,
         materiais: produto.materiais,
         prazoProducao: produto.prazoProducao,
-        valorElo7: produto.valorVenda
+        valorElo7: produto.valorElo7
     }
   }
 }

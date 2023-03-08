@@ -51,7 +51,7 @@ export class RequestResetPasswordUseCase
 
       const { CLIENT_URL } = process.env;
 
-      const link = `${CLIENT_URL}/#/change-password?token=${resetToken}&usuarioId=${usuario.id.toString()}`;
+      const link = `${CLIENT_URL}#/change-password?token=${resetToken}&usuarioId=${usuario.id.toString()}`;
 
       return right(Result.ok<string>(link));
     } catch (error) {

@@ -5,7 +5,7 @@ import { UsuarioInMemoryRepository } from "../../../../infrastructure/repositori
 import { RegisterUsuarioUseCase } from "../../usuario/registerUsuario/registerUsuario.useCase";
 import { RequestResetPasswordUseCase } from "./requestResetPassword.useCase";
 import { TokenInMemoryRepository } from "../../../../infrastructure/repositories/token/tokeninMemory.repository";
-
+import { describe, it, expect} from 'vitest';
 describe("RequestResetPasswordUseCase", () => {
   it("should return a valid link", async () => {
     const usuarioRepository = new UsuarioInMemoryRepository();
@@ -16,7 +16,7 @@ describe("RequestResetPasswordUseCase", () => {
     const usuarioInput: UsuarioInputDTO = {
       nome: "Leandro",
       email: "leandro@email.com",
-      password: "leanBIO!0",
+      password: "a1mA9mQ1r^2!",
     };
 
     await registerUsuariouseCase.execute(usuarioInput);

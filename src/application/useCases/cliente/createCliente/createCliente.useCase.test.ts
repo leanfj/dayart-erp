@@ -1,7 +1,7 @@
 import { ClienteInputDTO } from "../../../../domain/DTOS/cliente/cliente.dto";
 import { ClienteInMemoryRepository } from "../../../../infrastructure/repositories/cliente/clienteInMemory.repository";
 import { CreateClienteUseCase } from "./createCliente.useCase";
-
+import { describe, it, expect} from 'vitest';
 describe("CreateClienteUseCase", () => {
   it("should create a new cliente", async () => {
     const clienteRepository = new ClienteInMemoryRepository();

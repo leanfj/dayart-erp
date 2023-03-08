@@ -4,7 +4,7 @@ import { ValorElo7 } from "../../valueObjects/produto/valorElo7";
 import { ProdutoInputDTO } from "./produto.dto";
 import { validatorDTO } from "../../../core/domain/validatorDTO";
 import { Left } from "../../../core/logic/result";
-
+import { describe, it, expect} from 'vitest';
 
 describe("Produto", () => {
   it("should create a valid Produto",async () => {
@@ -17,7 +17,7 @@ describe("Produto", () => {
       prazoProducao: "15 dias"
     };
 
-    const produto = Produto.create({...input, valorElo7: new ValorElo7(input.valorVenda)});
+    const produto = Produto.create({...input, valorElo7: new ValorElo7(input.valorVenda).Value});
 
     expect(produto.titulo).toBe(input.titulo);
     expect(produto.descricao).toBe(input.descricao);

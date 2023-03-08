@@ -3,7 +3,7 @@ import { ProdutoInputDTO } from "../../../../domain/DTOS/produto/produto.dto";
 import { Produto } from "../../../../domain/entities/produto/produto.entity";
 import { ProdutoInMemoryRepository } from "../../../../infrastructure/repositories/produto/produtoInMemory.repository";
 import { DeleteProdutoUseCase } from "./deleteProduto.useCase";
-
+import { describe, it, expect} from 'vitest';
 describe("DeleteProdutoUseCase", () => {
   it("should delete a produto", async () => {
     const produtoRepository = new ProdutoInMemoryRepository();

@@ -6,7 +6,7 @@ import { RegisterUsuarioUseCase } from "../../usuario/registerUsuario/registerUs
 import { TokenInMemoryRepository } from "../../../../infrastructure/repositories/token/tokeninMemory.repository";
 import { RequestResetPasswordUseCase } from "../requestResetPassword/requestResetPassword.useCase";
 import { ResetPasswordUseCase } from "./resetPassword.useCase";
-
+import { describe, it, expect} from 'vitest';
 describe("ResetPasswordUseCase", () => {
   it("should return a success message", async () => {
     const usuarioRepository = new UsuarioInMemoryRepository();
@@ -26,7 +26,7 @@ describe("ResetPasswordUseCase", () => {
     const usuarioInput: UsuarioInputDTO = {
       nome: "Leandro",
       email: "leandro@email.com",
-      password: "leanBIO!0",
+      password: "a1mA9mQ1r^2!",
     };
 
     await registerUsuariouseCase.execute(usuarioInput);
@@ -39,14 +39,18 @@ describe("ResetPasswordUseCase", () => {
       "http://localhost:3000/change-password?",
       ""
     );
+    const parameters = tokenAndUsuarioId.replace("http://localhost:3000/#/change-password?", "")
 
-    const token = tokenAndUsuarioId.split("&")[0].replace("token=", "");
-    const usuarioId = tokenAndUsuarioId.split("&")[1].replace("usuarioId=", "");
+
+    const [token, usuarioId] = parameters.split("&");
+
+    // const token = split("&")[0].replace("token=", "");
+    // const usuarioId = tokenAndUsuarioId.replace("http://localhost:3000/change-password?", "").split("&")[1].replace("usuarioId=", "");
 
 
     const resetResult = await resetPasswordUseCase.execute({
-      usuarioId: usuarioId,
-      token: token,
+      usuarioId: usuarioId.replace("usuarioId=", ""),
+      token: token.replace("token=", ""),
       password: "/C{fIpm0Oehv.zS"
     });
 

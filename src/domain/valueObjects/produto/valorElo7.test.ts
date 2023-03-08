@@ -1,5 +1,5 @@
 import { ValorElo7 } from "./valorElo7";
-
+import { describe, it, expect} from 'vitest';
 describe('ValorElo7', () => {
   it('should be return a value with plus 20%', () => {
     const valorElo7 = new ValorElo7(20)

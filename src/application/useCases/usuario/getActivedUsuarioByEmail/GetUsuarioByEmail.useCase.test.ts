@@ -3,7 +3,7 @@ import { UsuarioInputDTO } from "../../../../domain/DTOS/usuario/usuario.dto";
 import { UsuarioInMemoryRepository } from "../../../../infrastructure/repositories/usuario/usuarioinMemory.repository";
 import { GetactivedUsuarioByEmailUseCase } from "./GetActivedUsuarioByEmail.useCase";
 import { RegisterUsuarioUseCase } from "../registerUsuario/registerUsuario.useCase";
-
+import { describe, it, expect} from 'vitest';
 describe("GetActivedUsuarioByEmailUseCase", () => {
   it("should return finded usuario by emial", async () => {
     const usuarioRepository = new UsuarioInMemoryRepository();

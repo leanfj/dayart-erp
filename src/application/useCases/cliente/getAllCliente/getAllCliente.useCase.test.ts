@@ -2,7 +2,7 @@ import { ClienteInputDTO } from "../../../../domain/DTOS/cliente/cliente.dto";
 import { ClienteInMemoryRepository } from "../../../../infrastructure/repositories/cliente/clienteInMemory.repository";
 import { CreateClienteUseCase } from "../createCliente/createCliente.useCase";
 import { GetAllClienteUseCase } from "./getAllCliente.usecase";
-
+import { describe, it, expect} from 'vitest';
 describe("GetAllClienteUseCase", () => {
   it("should get all cliente list", async () => {
     const clienteRepository = new ClienteInMemoryRepository();

@@ -3,7 +3,7 @@ import { Produto } from "../../../../domain/entities/produto/produto.entity";
 import {ProdutoInMemoryRepository} from "../../../../infrastructure/repositories/produto/produtoInMemory.repository";
 import { CreateProdutoUseCase } from "../createProduto/createProduto.useCase";
 import { UpdateProdutoUseCase } from "./updateProduto.useCase";
-
+import { describe, it, expect} from 'vitest';
 describe("CreateProdutoUseCase", () => {
   it("should create a new produto", async () => {
     const produtoRepository = new ProdutoInMemoryRepository();

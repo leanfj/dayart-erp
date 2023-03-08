@@ -3,7 +3,7 @@ import {ClienteInMemoryRepository} from "../../../../infrastructure/repositories
 import { UpdateClienteUseCase } from "./updateCliente.useCase";
 import { CreateClienteUseCase } from "../createCliente/createCliente.useCase";
 import { Cliente } from "../../../../domain/entities/cliente/cliente.entity";
-
+import { describe, it, expect} from 'vitest';
 describe("CreateClienteUseCase", () => {
   it("should create a new cliente", async () => {
     const clienteRepository = new ClienteInMemoryRepository();

@@ -3,7 +3,7 @@ import { Produto } from "../../../../domain/entities/produto/produto.entity";
 import { ProdutoInMemoryRepository } from "../../../../infrastructure/repositories/produto/produtoInMemory.repository";
 import { CreateProdutoUseCase } from "../createProduto/createProduto.useCase";
 import { GetAllProdutoUseCase } from "./getAllProduto.usecase";
-
+import { describe, it, expect} from 'vitest';
 describe("GetAllProdutoUseCase", () => {
   it("should get all produto list", async () => {
     const produtoRepository = new ProdutoInMemoryRepository();

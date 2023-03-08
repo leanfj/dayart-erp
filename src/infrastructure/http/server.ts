@@ -5,12 +5,15 @@ import colors from "colors/safe";
 import { Database } from "../database/sequelize";
 import { ClienteController } from "./controllers/cliente/cliente.controller";
 import { UsuarioController } from "./controllers/usuario/usuario.controller";
+import { ProdutoController } from "./controllers/produto/produto.controller";
+import { AutorizacaoController } from "./controllers/autorizacao/autorizacao.controller";
 import { ClienteService } from "./services/cliente/cliente.service";
 import { UsuarioService } from "./services/usuario/usuario.service";
 import { LoginService } from "./services/autorizacao/login.service";
+import { ProdutoService } from "./services/produto/produto.service";
 import { ClienteDBRepository } from "../repositories/cliente/clienteDB.repository";
 import { UsuarioDBRepository } from "../repositories/usuario/usuarioDB.repository";
-import { AutorizacaoController } from "./controllers/autorizacao/autorizacao.controller";
+import { ProdutoDBRepository } from "../repositories/produto/produtoDB.repository";
 
 (async () => {
   const dataBase = new Database();
@@ -21,11 +24,13 @@ import { AutorizacaoController } from "./controllers/autorizacao/autorizacao.con
   
   const clienteService = new ClienteService(new ClienteDBRepository());
   const usuarioService = new UsuarioService(new UsuarioDBRepository());
+  const produtoService = new ProdutoService(new ProdutoDBRepository());
   const loginService = new LoginService();
 
   const app = new App([
     new ClienteController(clienteService),
     new UsuarioController(usuarioService),
+    new ProdutoController(produtoService),
     new AutorizacaoController(loginService, usuarioService)
   ]);
 

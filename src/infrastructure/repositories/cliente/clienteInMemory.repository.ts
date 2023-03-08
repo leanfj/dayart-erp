@@ -1,3 +1,4 @@
+import { ClienteMapper } from "../../../domain/mappers/cliente/cliente.mapper";
 import { UniqueEntityID } from "../../../core/domain/uniqueIdEntity";
 import { Either, Result, left, right } from "../../../core/logic/result";
 import { AppError } from "../../../core/shared/appError";
@@ -43,7 +44,9 @@ export class ClienteInMemoryRepository implements ClienteRepository {
 
   async findById(id: UniqueEntityID): Promise<Response> {
     try {
-      const clienteData = this.clientes.find((cliente) => cliente.id === id);
+      const clienteData = this.clientes.find(
+        (cliente) => cliente.id.toString() === id.toString()
+      );
       if (!clienteData) {
         return left(new ClienteRepositoryErrors.ClienteNotExists());
       }
@@ -90,13 +93,16 @@ export class ClienteInMemoryRepository implements ClienteRepository {
 
   async update(id: UniqueEntityID, input: any): Promise<Response> {
     try {
-      const index = this.clientes.findIndex((cliente) => cliente.id === id);
+      const index = this.clientes.findIndex(
+        (cliente) => cliente.id.toString() === id.toString()
+      );
       if (index === -1) {
         return left(new ClienteRepositoryErrors.ClienteNotExists());
       }
-      const cliente = this.clientes[index];
-      this.clientes[index] = { ...cliente, ...input };
-      return right(Result.ok<Cliente>(this.clientes[index]));
+      this.clientes[index] = input;
+      return right(
+        Result.ok<Cliente>(ClienteMapper.toDomain(this.clientes[index]))
+      );
     } catch (error) {
       return left(new AppError.UnexpectedError(error));
     }
@@ -104,7 +110,9 @@ export class ClienteInMemoryRepository implements ClienteRepository {
 
   async delete(id: UniqueEntityID): Promise<Response> {
     try {
-      const index = this.clientes.findIndex((cliente) => cliente.id === id);
+      const index = this.clientes.findIndex(
+        (cliente) => cliente.id.toString() === id.toString()
+      );
       if (index === -1) {
         return left(new ClienteRepositoryErrors.ClienteNotExists());
       }

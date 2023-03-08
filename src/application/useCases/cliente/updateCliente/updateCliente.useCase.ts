@@ -1,3 +1,4 @@
+import { UniqueEntityID } from "../../../../core/domain/uniqueIdEntity";
 import { UseCase } from "../../../../core/application/useCase";
 import { Either, Result, left, right } from "../../../../core/logic/result";
 import { AppError } from "../../../../core/shared/appError";
@@ -14,7 +15,7 @@ export class UpdateClienteUseCase
   constructor(private clienteRepository: ClienteRepository) {}
 
   async execute(input: ClienteInputDTO): Promise<Response> {
-    const cliente = Cliente.create({
+    const newCliente = Cliente.create({
       nome: input.nome,
       email: input.email,
       genero: input.genero,
@@ -25,7 +26,7 @@ export class UpdateClienteUseCase
       cep: input.cep,
       cpf: input.cpf,
       dataEvento: input.dataEvento,
-    });
+    }, new UniqueEntityID(input.id.toString()));
 
     try {
       const clienteData = await this.clienteRepository.findById(
@@ -38,9 +39,9 @@ export class UpdateClienteUseCase
         );
       }
 
-      await this.clienteRepository.update(input.id, cliente);
+      const updateOrError = await this.clienteRepository.update(input.id, newCliente);
       
-      return right(Result.ok<Cliente>(cliente));
+      return right(Result.ok<Cliente>(updateOrError.value.getValue() as Cliente));
     } catch (error) {
       return left(new AppError.UnexpectedError(error));
     }

@@ -15,7 +15,6 @@ export class Database {
       timezone: "-03:00",
       dialectOptions: {
         useUTC: false,
-        socketPath: `/cloudsql/${process.env.CLOUD_SQL_CONNECTION_NAME}`
       },
       define: {
         underscored: true,

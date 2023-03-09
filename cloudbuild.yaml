@@ -1,37 +1,59 @@
 steps:
 # Install dependencies
-- name: node
-  entrypoint: npm
-  args: ['install']
-# Run tests
-# - name: node
-#   entrypoint: npm
-#   args: ['test']
-# Run custom commands
-- name: node
-  entrypoint: npm
-  args: ["run", "create-env"]
-  env:
-    - 'POSTGRES_DB_NAME=${_POSTGRES_DB_NAME}'
-    - 'POSTGRES_DB_USERNAME=${_POSTGRES_DB_USERNAME}'
-    - 'POSTGRES_DB_PASSWORD=${_POSTGRES_DB_PASSWORD}'
-    - 'POSTGRES_DB_HOST=${_POSTGRES_DB_HOST}'
-    - 'POSTGRES_DB_PORT=${_POSTGRES_DB_PORT}'
-    - 'JWT_SECRET=${_JWT_SECRET}'
-    - 'EMAIL_HOST=${_EMAIL_HOST}'
-    - 'EMAIL_USERNAME=${_EMAIL_USERNAME}'
-    - 'EMAIL_PASSWORD=${_EMAIL_PASSWORD}'
-    - 'FROM_EMAIL=${_FROM_EMAIL}'
-    - 'CLIENT_URL=${_CLIENT_URL}'
-- name: node
-  entrypoint: npm
-  args: ['run', 'prestart']
-- name: node
-  entrypoint: npm
-  args: ['run', 'migrate:prod']
-- name: "gcr.io/cloud-builders/gcloud"
-  args: ["app", "deploy"]
-timeout: "1600s"
+  - id: "docker-build"
+    name: "gcr.io/cloud-builders/docker"
+    args: ["build", "-t", "${_IMAGE_NAME}", "sql-proxy/."]
+
+  - id: "docker-push"
+    name: "gcr.io/cloud-builders/docker"
+    args: ["push", "${_IMAGE_NAME}"]
+
+  - id: "docker-layer"
+    name: "gcr.io/cloud-builders/docker"
+    entrypoint: /bin/bash
+    args:
+      - '-c'
+      - |
+        echo "FROM $_IMAGE_NAME
+        COPY --from=gcr.io/cloud-sql-connectors/cloud-sql-proxy /cloud-sql-proxy /cloudsql/cloud-sql-proxy" > Dockerfile-proxy;
+
+        docker build -f Dockerfile-proxy -t ${_IMAGE_NAME}-proxy .
+
+  - name: node
+    entrypoint: npm
+    args: ['install']
+  # Run tests
+  # - name: node
+  #   entrypoint: npm
+  #   args: ['test']
+  # Run custom commands
+  - name: node
+    entrypoint: npm
+    args: ["run", "create-env"]
+    env:
+      - 'POSTGRES_DB_NAME=${_POSTGRES_DB_NAME}'
+      - 'POSTGRES_DB_USERNAME=${_POSTGRES_DB_USERNAME}'
+      - 'POSTGRES_DB_PASSWORD=${_POSTGRES_DB_PASSWORD}'
+      - 'POSTGRES_DB_HOST=${_POSTGRES_DB_HOST}'
+      - 'POSTGRES_DB_PORT=${_POSTGRES_DB_PORT}'
+      - 'JWT_SECRET=${_JWT_SECRET}'
+      - 'EMAIL_HOST=${_EMAIL_HOST}'
+      - 'EMAIL_USERNAME=${_EMAIL_USERNAME}'
+      - 'EMAIL_PASSWORD=${_EMAIL_PASSWORD}'
+      - 'FROM_EMAIL=${_FROM_EMAIL}'
+      - 'CLIENT_URL=${_CLIENT_URL}'
+  - name: node
+    entrypoint: npm
+    args: ['run', 'prestart']
+  - name: node
+    entrypoint: npm
+    args: ['run', 'migrate:prod']
+  - name: "gcr.io/cloud-builders/gcloud"
+    args: ["app", "deploy"]
 options:
-  logging: CLOUD_LOGGING_ONLY
+  dynamic_substitutions: true
+substitutions:
+  _IMAGE_NAME: gcr.io/${PROJECT_ID}/sample-sql-proxy
+# options:
+#   logging: CLOUD_LOGGING_ONLY
 # [END cloudbuild_npm_node]

@@ -10,8 +10,26 @@ steps:
 # Run custom commands
 - name: node
   entrypoint: npm
+  args: ["run", "create-env"]
+  env:
+    - 'POSTGRES_DB_NAME=${_POSTGRES_DB_NAME}'
+    - 'POSTGRES_DB_USERNAME=${_POSTGRES_DB_USERNAME}'
+    - 'POSTGRES_DB_PASSWORD=${_POSTGRES_DB_PASSWORD}'
+    - 'POSTGRES_DB_HOST=${_POSTGRES_DB_HOST}'
+    - 'POSTGRES_DB_PORT=${_POSTGRES_DB_PORT}'
+    - 'JWT_SECRET=${_JWT_SECRET}'
+    - 'EMAIL_HOST=${_EMAIL_HOST}'
+    - 'EMAIL_USERNAME=${_EMAIL_USERNAME}'
+    - 'EMAIL_PASSWORD=${_EMAIL_PASSWORD}'
+    - 'FROM_EMAIL=${_FROM_EMAIL}'
+    - 'CLIENT_URL=${_CLIENT_URL}'
+- name: node
+  entrypoint: npm
   args: ['run', 'prestart']
 - name: node
   entrypoint: npm
   args: ['run', 'migrate:prod']
+- name: "gcr.io/cloud-builders/gcloud"
+  args: ["app", "deploy"]
+timeout: "1600s"
 # [END cloudbuild_npm_node]

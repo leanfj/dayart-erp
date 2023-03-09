@@ -7,6 +7,7 @@
     "build": "tsc",
     "prestart": "npm run build && npm run copy:templates",
     "start": "node dist/index.js",
+    "create-env": "printenv > .env",
     "test": "vitest -w",
     "coverage": "vitest run --coverage",
     "copy:templates": "cpx './src/infrastructure/email/template/**' 'dist/infrastructure/email/template/'",

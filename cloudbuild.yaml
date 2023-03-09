@@ -1,13 +1,4 @@
 steps:
-# Install dependencies
-  - id: "docker-build"
-    name: "gcr.io/cloud-builders/docker"
-    args: ["build", "-t", "${_IMAGE_NAME}", "sql-proxy/."]
-
-  - id: "docker-push"
-    name: "gcr.io/cloud-builders/docker"
-    args: ["push", "${_IMAGE_NAME}"]
-
   - id: "docker-layer"
     name: "gcr.io/cloud-builders/docker"
     entrypoint: /bin/bash

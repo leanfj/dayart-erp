@@ -1,1 +1,3 @@
-runtime: nodejs16
+runtime: nodejs
+beta_settings:
+    cloud_sql_instances: dayart-erp:southamerica-east1:dayarterp

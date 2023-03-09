@@ -1,6 +1,6 @@
 steps:
 # Install dependencies
-- name: nodejs16
+- name: node
   entrypoint: npm
   args: ['install']
 # Run tests
@@ -8,7 +8,7 @@ steps:
 #   entrypoint: npm
 #   args: ['test']
 # Run custom commands
-- name: nodejs16
+- name: node
   entrypoint: npm
   args: ["run", "create-env"]
   env:
@@ -23,10 +23,10 @@ steps:
     - 'EMAIL_PASSWORD=${_EMAIL_PASSWORD}'
     - 'FROM_EMAIL=${_FROM_EMAIL}'
     - 'CLIENT_URL=${_CLIENT_URL}'
-- name: nodejs16
+- name: node
   entrypoint: npm
   args: ['run', 'prestart']
-- name: nodejs16
+- name: node
   entrypoint: npm
   args: ['run', 'migrate:prod']
 - name: "gcr.io/cloud-builders/gcloud"

@@ -29,7 +29,4 @@ steps:
 - name: node
   entrypoint: npm
   args: ['run', 'migrate:prod']
-- name: "gcr.io/cloud-builders/gcloud"
-  args: ["app", "deploy"]
-timeout: "1600s"
 # [END cloudbuild_npm_node]

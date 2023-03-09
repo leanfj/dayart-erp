@@ -7,10 +7,11 @@ import { loggerMiddleware } from "./middlewares/logger.middleware";
 
 export default class App {
   public app: express.Application;
+  private readonly port: number;
 
   constructor(controllers: BaseController[]) {
     this.app = express();
-
+    this.port = parseInt(process.env.PORT) || 3333;
     this.initializeMiddlewares();
     this.initializeLogger();
     this.initializeControllers(controllers);
@@ -18,10 +19,10 @@ export default class App {
   }
 
   public listen() {
-    return this.app.listen(process.env.PORT, () => {
+    return this.app.listen(this.port, () => {
         
       console.log(colors.bold(colors.bgGreen(colors.black("-----Servidor iniciado com sucesso!-----"))));
-      console.log(colors.bold(colors.bgGreen(colors.black(`-----App listening on the port ${process.env.PORT}-----`))));
+      console.log(colors.bold(colors.bgGreen(colors.black(`-----App listening on the port ${this.port}-----`))));
 
     });
   }

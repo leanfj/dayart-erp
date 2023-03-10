@@ -11,10 +11,10 @@
     "test": "vitest -w",
     "coverage": "vitest run --coverage",
     "copy:templates": "cpx './src/infrastructure/email/template/**' 'dist/infrastructure/email/template/'",
-    "start:dev": "nodemon --exec ts-node src/index.ts",
-    "migrate:dev": "NODE_ENV=development dotenv -e .env sequelize db:migrate",
+    "start:dev": "nodemon --exec NODE_ENV=development ts-node src/index.ts ",
+    "migrate:dev": "NODE_ENV=development dotenv -e .env.development sequelize db:migrate",
     "migrate:test": "NODE_ENV=test dotenv -e .env sequelize db:migrate --env test",
-    "migrate:prod": "sequelize db:migrate --env production"
+    "migrate:prod": "NODE_ENV=production dotenv -e .env.prod sequelize db:migrate --env production"
   },
   "keywords": [],
   "author": "",

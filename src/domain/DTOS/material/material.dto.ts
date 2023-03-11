@@ -1,8 +1,8 @@
 import { IsNotEmpty } from "class-validator";
 import { RandomCode } from "../../../core/domain/valueObjects/randomCode";
-import { ValorElo7 } from "../../../domain/valueObjects/produto/valorElo7";
+import { ValorElo7 } from "../../valueObjects/produto/valorElo7";
 export class ProdutoInputDTO {
-  // id?: string;
+  id?: string;
 
   @IsNotEmpty()
   titulo: string;
@@ -20,4 +20,6 @@ export class ProdutoInputDTO {
   
   valorElo7?: ValorElo7 | number;
 
+  dataCadastro?: Date;
+  dataAtualizacao?: Date;
 }

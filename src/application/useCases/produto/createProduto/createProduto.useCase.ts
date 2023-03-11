@@ -1,4 +1,3 @@
-import { ValorElo7 } from "../../../../domain/valueObjects/produto/valorElo7";
 import { UseCase } from "../../../../core/application/useCase";
 import { Either, Result, left, right } from "../../../../core/logic/result";
 import { AppError } from "../../../../core/shared/appError";
@@ -6,7 +5,6 @@ import { ProdutoInputDTO } from "../../../../domain/DTOS/produto/produto.dto";
 import { Produto } from "../../../../domain/entities/produto/produto.entity";
 import { ProdutoRepository } from "../../../../domain/repositories/produto/produto.repository";
 import { CreateProdutoErrors } from "./createProdutoErrors";
-import { RandomCode } from "../../../../domain/valueObjects/produto/randomCode";
 
 type Response = Either<AppError.UnexpectedError, Result<Produto>>;
 

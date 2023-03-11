@@ -67,9 +67,10 @@ export class ProdutoService {
         return left(validOrError.value);
       }
       const result = await this.updateProdutoUseCase.execute({
-        ...produto,
+        props: validOrError.value.getValue(),
         id: id.toString(),
       });
+
       if (result.isLeft()) {
         return left(result.value);
       } else {

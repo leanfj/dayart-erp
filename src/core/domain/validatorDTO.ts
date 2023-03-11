@@ -22,6 +22,6 @@ export const validatorDTO = async <T extends ClassConstructor<any>>(
       )
     );
   } else {
-    return right(Result.ok<any>());
+    return right(Result.ok<any>(obj));
   }
 };

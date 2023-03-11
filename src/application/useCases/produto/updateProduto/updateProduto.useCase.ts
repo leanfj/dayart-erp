@@ -8,24 +8,13 @@ import { ProdutoRepository } from "../../../../domain/repositories/produto/produ
 import { UpdateProdutoErrors } from "./updateProdutoErrors";
 
 type Response = Either<AppError.UnexpectedError, Result<Produto>>;
-
+type Request = {id: string, props: ProdutoInputDTO};
 export class UpdateProdutoUseCase
-  implements UseCase<ProdutoInputDTO, Promise<Response>>
+  implements UseCase<Request, Promise<Response>>
 {
   constructor(private produtoRepository: ProdutoRepository) {}
 
-  async execute(input: ProdutoInputDTO): Promise<Response> {
-    const produto = Produto.create({
-      titulo: input.titulo,
-      descricao: input.descricao,
-      valorVenda: input.valorVenda,
-      valorCusto: input.valorCusto,
-      materiais: input.materiais,
-      prazoProducao: input.prazoProducao,
-      dataCadastro: input.dataCadastro,
-      dataAtualizacao: input.dataAtualizacao,
-    }, new UniqueEntityID(input.id));
-
+  async execute(input: Request): Promise<Response> {
     try {
       const produtoData = await this.produtoRepository.findById(
         input.id
@@ -37,9 +26,9 @@ export class UpdateProdutoUseCase
         );
       }
 
-      await this.produtoRepository.update(input.id, produto);
+      await this.produtoRepository.update(input.id, input.props);
       
-      return right(Result.ok<Produto>(produto));
+      return right(Result.ok<Produto>(produtoData.value.getValue() as Produto));
     } catch (error) {
       return left(new AppError.UnexpectedError(error));
     }

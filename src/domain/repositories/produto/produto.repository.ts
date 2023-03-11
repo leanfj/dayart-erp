@@ -12,6 +12,6 @@ export interface ProdutoRepository {
   findById(id: string | UniqueEntityID): Promise<Response>;
   exists(id: string): Promise<boolean>;
   save(produto: Produto): Promise<Response>;
-  update(id: string | UniqueEntityID, produto: Produto): Promise<Response>;
+  update(id: string | UniqueEntityID, input: ProdutoInputDTO): Promise<Response>;
   delete(id: string | UniqueEntityID): Promise<Response>;
 }

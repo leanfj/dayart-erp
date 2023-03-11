@@ -6,6 +6,7 @@ import { ProdutoMapper } from "../../../domain/mappers/produto/produto.mapper";
 import { ProdutoRepository } from "../../../domain/repositories/produto/produto.repository";
 import { ProdutoModel } from "../../database/models";
 import { ProdutoRepositoryErrors } from "./produtoRepositoryErrors";
+import { ValorElo7 } from "../../../domain/valueObjects/produto/valorElo7";
 
 type Response = Either<AppError.UnexpectedError, Result<Produto | Produto[]>>;
 
@@ -72,21 +73,38 @@ export class ProdutoDBRepository implements ProdutoRepository {
     }
   }
 
-  async update(id: UniqueEntityID, input: any): Promise<Response> {
+  async update(id: string, input: any): Promise<Response> {
     try {
-      const produtoData = await this.findById(id);
+      const produtoData = await this.findById(new UniqueEntityID(id));
 
       if (!produtoData) {
         return left(new ProdutoRepositoryErrors.ProdutoNotExists());
       }
 
-      await ProdutoModel.update(ProdutoMapper.toPersistence(input), {
+      if (
+        input.valorVenda &&
+        !input.valorElo7
+      ) {
+        input.valorElo7 = new ValorElo7(input.valorVenda).Value;
+      }
+
+      const dataToUpdate = {
+        ...input,
+        dataAtualizacao: new Date(),
+      };
+
+      const updatedProduto = await ProdutoModel.update(dataToUpdate, {
         where: {
           id: id.toString(),
         },
+        returning: true,
       });
 
-      return right(Result.ok<Produto>(ProdutoMapper.toDomain(input)));
+      return right(
+        Result.ok<Produto>(
+          ProdutoMapper.toDomain(updatedProduto[1][0].dataValues)
+        )
+      );
     } catch (error) {
       return left(new AppError.UnexpectedError(error));
     }

@@ -1,4 +1,4 @@
-import { RandomCode } from "../../../domain/valueObjects/produto/randomCode";
+import { RandomCode } from "../../../core/domain/valueObjects/randomCode";
 import { Entity } from "../../../core/domain/entity";
 import { UniqueEntityID } from "../../../core/domain/uniqueIdEntity";
 import { ValorElo7 } from "../../../domain/valueObjects/produto/valorElo7";
@@ -13,15 +13,11 @@ type ProdutoProps = {
   materiais: string[];
   prazoProducao: string;
   valorElo7?: ValorElo7 | number;
-  dataCadastro?: Date;
-  dataAtualizacao?: Date;
 };
 
 export class Produto extends Entity<ProdutoProps> {
   constructor(props: ProdutoProps, id?: UniqueEntityID) {
     super(props, id);
-    this.props.codigo = this.codigo || new RandomCode().Value;
-    this.props.valorElo7 = this.valorElo7 || new ValorElo7(this.props.valorVenda).Value;
   }
 
   get id(): UniqueEntityID {
@@ -60,15 +56,15 @@ export class Produto extends Entity<ProdutoProps> {
     return this.props.valorElo7;
   }
 
-  get dataCadastro(): Date {
-    return this.props.dataCadastro;
-  }
-
-  get dataAtualizacao(): Date {
-    return this.props.dataAtualizacao;
-  }
-
   static create(props: ProdutoProps, id?: UniqueEntityID): Produto {
+    props.codigo = props.codigo ? props.codigo : new RandomCode().Value;
+    props.valorElo7 = props.valorElo7
+      ? props.valorElo7
+      : new ValorElo7(props.valorVenda).Value;
     return new Produto(props, id);
+  }
+
+  public calcularValorElo7(props: ProdutoProps): void {
+    this.props.valorElo7 = new ValorElo7(props.valorVenda).Value;
   }
 }

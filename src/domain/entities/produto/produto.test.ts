@@ -1,4 +1,4 @@
-import { RandomCode } from "../../../domain/valueObjects/produto/randomCode";
+import { RandomCode } from "../../../core/domain/valueObjects/randomCode";
 import { Produto } from "./produto.entity";
 import { ValorElo7 } from "../../../domain/valueObjects/produto/valorElo7";
 import { describe, it, expect } from "vitest";

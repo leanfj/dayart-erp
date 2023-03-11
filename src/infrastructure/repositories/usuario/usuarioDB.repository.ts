@@ -62,7 +62,11 @@ export class UsuarioDBRepository implements UsuarioRepository {
 
   async findById(id: UniqueEntityID): Promise<Response> {
     try {
-      const usuarioData = await UsuarioModel.findByPk(id.toString());
+      const usuarioData = await UsuarioModel.findByPk(id.toString(), {
+        attributes: {
+          exclude: ["password"],
+        },
+      });
 
       if (!usuarioData) {
         return left(new UsuarioRepositoryErrors.UsuarioNotExists());

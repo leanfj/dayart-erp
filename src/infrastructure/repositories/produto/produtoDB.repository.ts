@@ -6,7 +6,6 @@ import { ProdutoMapper } from "../../../domain/mappers/produto/produto.mapper";
 import { ProdutoRepository } from "../../../domain/repositories/produto/produto.repository";
 import { ProdutoModel } from "../../database/models";
 import { ProdutoRepositoryErrors } from "./produtoRepositoryErrors";
-import { ValorElo7 } from "../../../domain/valueObjects/produto/valorElo7";
 
 type Response = Either<AppError.UnexpectedError, Result<Produto | Produto[]>>;
 
@@ -15,7 +14,9 @@ export class ProdutoDBRepository implements ProdutoRepository {
 
   async findAll(): Promise<Response> {
     try {
-      const produtoData = await ProdutoModel.findAll();
+      const produtoData = await ProdutoModel.findAll({
+        raw: true,
+      });
       if (produtoData.length === 0) {
         return left(new ProdutoRepositoryErrors.ProdutoListEmpty());
       }
@@ -79,13 +80,6 @@ export class ProdutoDBRepository implements ProdutoRepository {
 
       if (!produtoData) {
         return left(new ProdutoRepositoryErrors.ProdutoNotExists());
-      }
-
-      if (
-        input.valorVenda &&
-        !input.valorElo7
-      ) {
-        input.valorElo7 = new ValorElo7(input.valorVenda).Value;
       }
 
       const dataToUpdate = {

@@ -1,4 +1,4 @@
-import { ProdutoInputDTO } from "domain/DTOS/produto/produto.dto";
+import { ProdutoInputDTO } from "../../../domain/DTOS/produto/produto.dto";
 import { UniqueEntityID } from "../../../core/domain/uniqueIdEntity";
 import { Either, Result } from "../../../core/logic/result";
 import { AppError } from "../../../core/shared/appError";

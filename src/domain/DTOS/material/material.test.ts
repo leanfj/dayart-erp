@@ -1,46 +1,36 @@
-import { Produto } from "../../entities/produto/produto.entity";
+import { Material } from "../../entities/material/material.entity";
 import { RandomCode } from "../../../core/domain/valueObjects/randomCode";
-import { ValorElo7 } from "../../valueObjects/produto/valorElo7";
-import { ProdutoInputDTO } from "./produto.dto";
+import { MaterialInputDTO } from "./material.dto";
 import { validatorDTO } from "../../../core/domain/validatorDTO";
 import { Left } from "../../../core/logic/result";
 import { describe, it, expect} from 'vitest';
 
-describe("Produto", () => {
-  it("should create a valid Produto",async () => {
-    const input: ProdutoInputDTO = {
-      titulo: "Produto 1",
-      descricao: "Descrição do produto 1",
-      valorVenda: 10,
-      valorCusto: 5,
-      materiais: ["Material 1", "Material 2"],
-      prazoProducao: "15 dias"
+describe("Material DTO", () => {
+  it("should create a valid Material",async () => {
+    const input: MaterialInputDTO = {
+      titulo: "Material 1",
+      descricao: "Descrição do material 1",
+      valor: 10,
+      unidadeMedida: "un"
     };
 
-    const produto = Produto.create({...input, valorElo7: new ValorElo7(input.valorVenda).Value});
+    const material = Material.create({...input});
 
-    expect(produto.titulo).toBe(input.titulo);
-    expect(produto.descricao).toBe(input.descricao);
-    expect(produto.valorVenda).toBe(input.valorVenda);
-    expect(produto.valorCusto).toBe(input.valorCusto);
-    expect(produto.materiais).toBe(input.materiais);
-    expect(produto.prazoProducao).toBe(input.prazoProducao);
-    expect(produto.valorElo7).toBe(input.valorVenda * 1.2);
-    
+    expect(material.titulo).toBe(input.titulo);
+    expect(material.descricao).toBe(input.descricao);
+    expect(material.valor).toBe(input.valor);    
   });
 
   it("should return error on data is empty ",async () => {
-    const input: ProdutoInputDTO = {
-      titulo: "Produto 1",
+    const input: MaterialInputDTO = {
+      titulo: "Material 1",
       codigo: new RandomCode(),
-      descricao: "Descrição do produto 1",
-      valorVenda: 10,
-      valorCusto: 5,
-      materiais: ["Material 1", "Material 2"],
-      prazoProducao: ""
+      descricao: "Descrição do material 1",
+      valor: 10,
+      unidadeMedida: ""
     };
 
-    const validOrError = await validatorDTO(ProdutoInputDTO, input, {});
+    const validOrError = await validatorDTO(MaterialInputDTO, input, {});
     
     expect(validOrError).toBeInstanceOf(Left);
     

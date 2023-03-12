@@ -14,7 +14,6 @@ type MaterialProps = {
 export class Material extends Entity<MaterialProps> {
   constructor(props: MaterialProps, id?: UniqueEntityID) {
     super(props, id);
-    this.props.codigo = this.codigo || new RandomCode().Value;
   }
 
   get id(): UniqueEntityID {
@@ -42,6 +41,8 @@ export class Material extends Entity<MaterialProps> {
   }
 
   static create(props: MaterialProps, id?: UniqueEntityID): Material {
+    props.codigo = props.codigo ? props.codigo : new RandomCode().Value;
+
     return new Material(props, id);
   }
 }

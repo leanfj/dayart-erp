@@ -1,6 +1,5 @@
 import { Produto } from "../../entities/produto/produto.entity";
 import { RandomCode } from "../../../core/domain/valueObjects/randomCode";
-import { ValorElo7 } from "../../valueObjects/produto/valorElo7";
 import { ProdutoInputDTO } from "./produto.dto";
 import { validatorDTO } from "../../../core/domain/validatorDTO";
 import { Left } from "../../../core/logic/result";
@@ -17,7 +16,7 @@ describe("Produto", () => {
       prazoProducao: "15 dias"
     };
 
-    const produto = Produto.create({...input, valorElo7: new ValorElo7(input.valorVenda).Value});
+    const produto = Produto.create({...input});
 
     expect(produto.titulo).toBe(input.titulo);
     expect(produto.descricao).toBe(input.descricao);
@@ -25,7 +24,6 @@ describe("Produto", () => {
     expect(produto.valorCusto).toBe(input.valorCusto);
     expect(produto.materiais).toBe(input.materiais);
     expect(produto.prazoProducao).toBe(input.prazoProducao);
-    expect(produto.valorElo7).toBe(input.valorVenda * 1.2);
     
   });
 

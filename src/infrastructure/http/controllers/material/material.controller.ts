@@ -11,7 +11,7 @@ import { ValidatorDTOErrors } from "../../../../core/domain/validatorDTOErros";
 import { ensureAuthenticated } from "../../middlewares/ensureAuthenticated.middleware";
 
 export class MaterialController extends BaseController {
-  public path = "/materials";
+  public path = "/materiais";
   public router = Router();
 
   constructor(private materialService: MaterialService) {
@@ -22,6 +22,7 @@ export class MaterialController extends BaseController {
   private async initializeRoutes() {
     this.router.post(
       `${this.path}`,
+      ensureAuthenticated(),
       (request: Request, response: Response, next: NextFunction) =>
         this.create(request, response, next)
     );
@@ -34,12 +35,14 @@ export class MaterialController extends BaseController {
 
     this.router.patch(
       `${this.path}/:id`,
+      ensureAuthenticated(),
       (request: Request, response: Response, next: NextFunction) =>
         this.update(request, response, next)
     );
 
     this.router.delete(
       `${this.path}/:id`,
+      ensureAuthenticated(),
       (request: Request, response: Response, next: NextFunction) =>
         this.delete(request, response, next)
     );

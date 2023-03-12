@@ -19,7 +19,7 @@ import { LoginService } from "./services/autorizacao/login.service";
 import { ClienteDBRepository } from "../repositories/cliente/clienteDB.repository";
 import { UsuarioDBRepository } from "../repositories/usuario/usuarioDB.repository";
 import { ProdutoDBRepository } from "../repositories/produto/produtoDB.repository";
-import { MaterialDBRepository } from "infrastructure/repositories/material/materialDB.repository";
+import { MaterialDBRepository } from "../repositories/material/materialDB.repository";
 
 (async () => {
   const dataBase = new Database();

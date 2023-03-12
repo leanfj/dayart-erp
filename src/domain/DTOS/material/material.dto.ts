@@ -4,7 +4,6 @@ export class MaterialInputDTO {
   id?: string;
   @IsNotEmpty()
   titulo: string;
-  @IsNotEmpty()
   codigo?: RandomCode | string;
   @IsNotEmpty()
   descricao: string;

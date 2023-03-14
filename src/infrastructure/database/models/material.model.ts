@@ -5,7 +5,9 @@ import {
   InferAttributes,
   Model,
   Sequelize,
+  ForeignKey,
 } from "sequelize";
+import { UnidadeMedidaModel } from "./unidadeMedida.model";
 
 export class MaterialModel extends Model<
   InferAttributes<MaterialModel>,
@@ -16,7 +18,9 @@ export class MaterialModel extends Model<
   declare descricao: string | null;
   declare codigo: string | null;
   declare valor: number | null;
-  declare unidadeMedida: string | null;
+  declare valorUnitario: number | null;
+  declare quantidade: number | null;
+  declare unidadeMedidaId: ForeignKey<UnidadeMedidaModel["id"]>;
   declare dataCadastro: CreationOptional<Date | null>;
   declare dataAtualizacao: CreationOptional<Date | null>;
 
@@ -40,10 +44,13 @@ export class MaterialModel extends Model<
         codigo: {
           type: DataTypes.STRING(255),
         },
+        quantidade: {
+          type: DataTypes.DECIMAL(10, 2)
+        },
         valor: {
           type: DataTypes.DECIMAL(10, 2)
         },
-        unidadeMedida: {
+        valorUnitario: {
           type: DataTypes.DECIMAL(10, 2)
         },
         dataCadastro: {
@@ -68,6 +75,16 @@ export class MaterialModel extends Model<
       }
     );
 
+
     return MaterialModel;
+  }
+
+  static associate(models: any) {
+    MaterialModel.belongsTo(models.UnidadeMedidaModel, {
+      foreignKey: "unidadeMedidaId",
+      as: "unidadeMedida",
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE", 
+    });
   }
 }

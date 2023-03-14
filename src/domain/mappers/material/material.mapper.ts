@@ -3,6 +3,7 @@ import { Mapper } from "../../../core/shared/mapper";
 import { UniqueEntityID } from "../../../core/domain/uniqueIdEntity";
 import { Material } from "../../entities/material/material.entity";
 import { MaterialInputDTO } from "domain/DTOS/material/material.dto";
+import { UnidadeMedida } from "domain/entities/unidadeMedida/unidadeMedida.entity";
 
 export abstract class MaterialMapper implements Mapper<Material> {
 
@@ -13,7 +14,10 @@ export abstract class MaterialMapper implements Mapper<Material> {
         codigo: raw.codigo,
         descricao: raw.descricao,
         valor: raw.valor,
+        unidadeMedidaId: raw.unidadeMedidaId,
         unidadeMedida: raw.unidadeMedida,
+        quantidade: raw.quantidade,
+        valorUnitario: raw.valorUnitario,
     }, new UniqueEntityID(raw.id))
 
     return material;
@@ -26,7 +30,9 @@ export abstract class MaterialMapper implements Mapper<Material> {
         codigo: material.codigo,
         descricao: material.descricao,
         valor: material.valor,
-        unidadeMedida: material.unidadeMedida,
+        unidadeMedidaId: material.unidadeMedidaId,
+        quantidade: material.quantidade,
+        valorUnitario: material.valorUnitario,
     }
   }
 }

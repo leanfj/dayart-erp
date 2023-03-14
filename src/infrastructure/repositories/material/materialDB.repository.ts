@@ -4,7 +4,7 @@ import { AppError } from "../../../core/shared/appError";
 import { Material } from "../../../domain/entities/material/material.entity";
 import { MaterialMapper } from "../../../domain/mappers/material/material.mapper";
 import { MaterialRepository } from "../../../domain/repositories/material/material.repository";
-import { MaterialModel } from "../../database/models";
+import { MaterialModel, UnidadeMedidaModel } from "../../database/models";
 import { MaterialRepositoryErrors } from "./materialRepositoryErrors";
 
 type Response = Either<AppError.UnexpectedError, Result<Material | Material[]>>;
@@ -16,8 +16,16 @@ export class MaterialDBRepository implements MaterialRepository {
     try {
       const materialData = await MaterialModel.findAll({
         raw: true,
+        nest: true,
+        include: [
+          {
+            model: UnidadeMedidaModel,
+            as: "unidadeMedida",
+            attributes: ["id","nome", "nomenclatura", "categoria"],
+          }
+        ],
       });
-      if (materialData.length === 0) {
+      if (materialData. length === 0) {
         return left(new MaterialRepositoryErrors.MaterialListEmpty());
       }
 

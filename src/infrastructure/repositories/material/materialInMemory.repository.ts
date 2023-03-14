@@ -24,6 +24,8 @@ export class MaterialInMemoryRepository implements MaterialRepository {
             descricao: material.descricao,
             valor: material.valor,
             unidadeMedida: material.unidadeMedida,
+            quantidade: material.quantidade,
+            valorUnitario: material.valorUnitario,
           },
           new UniqueEntityID(material.id.toString())
         );
@@ -64,6 +66,8 @@ export class MaterialInMemoryRepository implements MaterialRepository {
         descricao: input.descricao,
         valor: input.valor,
         unidadeMedida: input.unidadeMedida,
+        quantidade: input.quantidade,
+        valorUnitario: input.valorUnitario,
       }, new UniqueEntityID(input.id.toString()));
 
       this.materials.push(newMaterial);

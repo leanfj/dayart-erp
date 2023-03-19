@@ -27,7 +27,6 @@ export abstract class ProdutoMapper implements Mapper<Produto> {
         descricao: produto.descricao,
         valorVenda: produto.valorVenda,
         valorCusto: produto.valorCusto,
-        materiais: produto.materiais,
         prazoProducao: produto.prazoProducao,
     }
   }

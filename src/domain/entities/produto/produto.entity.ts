@@ -1,6 +1,7 @@
 import { RandomCode } from "../../../core/domain/valueObjects/randomCode";
 import { Entity } from "../../../core/domain/entity";
 import { UniqueEntityID } from "../../../core/domain/uniqueIdEntity";
+import { Material } from "../material/material.entity";
 
 type ProdutoProps = {
   id?: string;
@@ -9,7 +10,7 @@ type ProdutoProps = {
   descricao: string;
   valorVenda: number;
   valorCusto: number;
-  materiais: string[];
+  materiais: Material[];
   prazoProducao: string;
 };
 
@@ -42,7 +43,7 @@ export class Produto extends Entity<ProdutoProps> {
     return this.props.valorCusto;
   }
 
-  get materiais(): string[] {
+  get materiais(): Material[] {
     return this.props.materiais;
   }
 

@@ -15,6 +15,5 @@ export class MaterialInputDTO {
   valor: number;
   @IsNotEmpty()
   quantidade: number;
-  @IsNotEmpty()
   valorUnitario: number;
 }

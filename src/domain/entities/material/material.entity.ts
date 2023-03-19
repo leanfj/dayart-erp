@@ -8,11 +8,11 @@ type MaterialProps = {
   titulo: string;
   codigo?: RandomCode | string;
   descricao: string;
-  unidadeMedidaId: string;
+  // unidadeMedidaId: string;
   unidadeMedida?: UnidadeMedida;
   valor: number;
   quantidade: number;
-  valorUnitario: number;
+  valorUnitario?: number;
 };
 
 export class Material extends Entity<MaterialProps> {
@@ -36,9 +36,9 @@ export class Material extends Entity<MaterialProps> {
     return this.props.descricao;
   }
 
-  get unidadeMedidaId(): string {
-    return this.props.unidadeMedidaId;
-  }
+  // get unidadeMedidaId(): string {
+  //   return this.props.unidadeMedidaId;
+  // }
 
   get unidadeMedida(): UnidadeMedida {
     return this.props.unidadeMedida;
@@ -56,10 +56,13 @@ export class Material extends Entity<MaterialProps> {
     return this.props.quantidade;
   }
 
-
   static create(props: MaterialProps, id?: UniqueEntityID): Material {
     props.codigo = props.codigo ? props.codigo : new RandomCode().Value;
-
+    props.valorUnitario = this.calculateValorUnitario(props.valor, props.quantidade); 
     return new Material(props, id);
+  }
+
+  public static calculateValorUnitario(valor: number, quantidade: number): number {
+    return valor / quantidade;
   }
 }

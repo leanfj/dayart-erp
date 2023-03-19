@@ -17,9 +17,7 @@ export class ProdutoModel extends Model<
   declare codigo: string | null;
   declare valorVenda: number | null;
   declare valorCusto: string | null;
-  declare materiais: string | null;
   declare prazoProducao: string | null;
-  declare valorElo7: number | null;
   declare dataCadastro: CreationOptional<Date | null>;
   declare dataAtualizacao: CreationOptional<Date | null>;
 
@@ -49,14 +47,8 @@ export class ProdutoModel extends Model<
         valorCusto: {
           type: DataTypes.DECIMAL(10, 2)
         },
-        materiais: {
-          type: DataTypes.STRING(255),
-        },
         prazoProducao: {
           type: DataTypes.STRING(255),
-        },
-        valorElo7: {
-          type: DataTypes.DECIMAL(10, 2)
         },
         dataCadastro: {
           type: "TIMESTAMP",

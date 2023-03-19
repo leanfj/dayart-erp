@@ -15,7 +15,7 @@ export class CreateProdutoUseCase
 
   async execute(input: ProdutoInputDTO): Promise<Response> {
     const produto = Produto.create({
-      ...input
+      ...input,
     });
 
     try {

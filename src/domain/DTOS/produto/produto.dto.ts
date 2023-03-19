@@ -1,5 +1,6 @@
 import { IsNotEmpty } from "class-validator";
 import { RandomCode } from "../../../core/domain/valueObjects/randomCode";
+import { Material } from "domain/entities/material/material.entity";
 export class ProdutoInputDTO {
   // id?: string;
 
@@ -13,7 +14,7 @@ export class ProdutoInputDTO {
   @IsNotEmpty()
   valorCusto: number;
   @IsNotEmpty()
-  materiais: string[];
+  materiais: Material[];
   @IsNotEmpty()
   prazoProducao: string;
   

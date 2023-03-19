@@ -21,11 +21,11 @@ export class MaterialDBRepository implements MaterialRepository {
           {
             model: UnidadeMedidaModel,
             as: "unidadeMedida",
-            attributes: ["id","nome", "nomenclatura", "categoria"],
-          }
+            attributes: ["id", "nome", "nomenclatura", "categoria"],
+          },
         ],
       });
-      if (materialData. length === 0) {
+      if (materialData.length === 0) {
         return left(new MaterialRepositoryErrors.MaterialListEmpty());
       }
 
@@ -76,7 +76,9 @@ export class MaterialDBRepository implements MaterialRepository {
         dataCadastro: new Date(),
       });
 
-      return right(Result.ok<Material>(MaterialMapper.toDomain(materialCreated)));
+      return right(
+        Result.ok<Material>(MaterialMapper.toDomain(materialCreated))
+      );
     } catch (error) {
       return left(new AppError.UnexpectedError(error));
     }

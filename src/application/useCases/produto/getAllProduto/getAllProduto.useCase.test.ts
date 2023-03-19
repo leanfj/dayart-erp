@@ -1,5 +1,7 @@
 import { ProdutoInputDTO } from "../../../../domain/DTOS/produto/produto.dto";
+import { Material } from "../../../../domain/entities/material/material.entity";
 import { Produto } from "../../../../domain/entities/produto/produto.entity";
+import { UnidadeMedida } from "../../../../domain/entities/unidadeMedida/unidadeMedida.entity";
 import { ProdutoInMemoryRepository } from "../../../../infrastructure/repositories/produto/produtoInMemory.repository";
 import { CreateProdutoUseCase } from "../createProduto/createProduto.useCase";
 import { GetAllProdutoUseCase } from "./getAllProduto.usecase";
@@ -12,12 +14,35 @@ describe("GetAllProdutoUseCase", () => {
     const createProdutoUseCase = new CreateProdutoUseCase(produtoRepository);
 
     const input: ProdutoInputDTO = {
-      titulo: "Produto 1",
-      descricao: "Descrição do produto 1",
-      valorVenda: 100,
-      valorCusto: 50,
-      materiais: ["Materiais do produto 1", "Materiais do produto 2"],
+      titulo: "Produto Teste",
+      descricao: "Descrição do produto teste",
+      valorVenda: 20,
+      valorCusto: 10,
       prazoProducao: "10 dias",
+      materiais: [
+        Material.create({
+          titulo: "Material 1",
+          descricao: "Descrição do material 1",
+          unidadeMedida: UnidadeMedida.create({
+            nome: "Unidade",
+            nomenclatura: "un",
+            categoria: "UNIDADE",
+          }),
+          valor: 10,
+          quantidade: 10,
+        }),
+        Material.create({
+          titulo: "Material 2",
+          descricao: "Descrição do material 2",
+          unidadeMedida: UnidadeMedida.create({
+            nome: "Unidade",
+            nomenclatura: "un",
+            categoria: "UNIDADE",
+          }),
+          valor: 100,
+          quantidade: 10,
+        }),
+      ],
     };
 
     await createProdutoUseCase.execute(input);

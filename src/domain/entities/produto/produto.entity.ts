@@ -10,8 +10,10 @@ type ProdutoProps = {
   descricao: string;
   valorVenda: number;
   valorCusto: number;
-  materiais: Material[];
+  materiais?: Material[];
   prazoProducao: string;
+  dataCadastro?: Date;
+  dataAtualizacao?: Date;
 };
 
 export class Produto extends Entity<ProdutoProps> {
@@ -50,6 +52,15 @@ export class Produto extends Entity<ProdutoProps> {
   get prazoProducao(): string {
     return this.props.prazoProducao;
   }
+
+  get dataCadastro(): Date {
+    return this.props.dataCadastro;
+  }
+
+  get dataAtualizacao(): Date {
+    return this.props.dataAtualizacao;
+  }
+
 
   static create(props: ProdutoProps, id?: UniqueEntityID): Produto {
     props.codigo = props.codigo ? props.codigo : new RandomCode().Value;

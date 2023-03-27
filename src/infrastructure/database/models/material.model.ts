@@ -45,13 +45,13 @@ export class MaterialModel extends Model<
           type: DataTypes.STRING(255),
         },
         quantidade: {
-          type: DataTypes.DECIMAL(10, 2)
+          type: DataTypes.DECIMAL(10, 2),
         },
         valor: {
-          type: DataTypes.DECIMAL(10, 2)
+          type: DataTypes.DECIMAL(10, 2),
         },
         valorUnitario: {
-          type: DataTypes.DECIMAL(10, 2)
+          type: DataTypes.DECIMAL(10, 2),
         },
         dataCadastro: {
           type: "TIMESTAMP",
@@ -60,9 +60,7 @@ export class MaterialModel extends Model<
         },
         dataAtualizacao: {
           type: "TIMESTAMP",
-          defaultValue: sequelize.literal(
-            "CURRENT_TIMESTAMP"
-          ),
+          defaultValue: sequelize.literal("CURRENT_TIMESTAMP"),
           allowNull: false,
         },
       },
@@ -75,7 +73,6 @@ export class MaterialModel extends Model<
       }
     );
 
-
     return MaterialModel;
   }
 
@@ -83,8 +80,12 @@ export class MaterialModel extends Model<
     MaterialModel.belongsTo(models.UnidadeMedidaModel, {
       foreignKey: "unidadeMedidaId",
       as: "unidadeMedida",
-      onDelete: "CASCADE",
-      onUpdate: "CASCADE", 
+    });
+
+    MaterialModel.belongsToMany(models.ProdutoModel, {
+      through: "materiais_produtos",
+      as: "produtos",
+      foreignKey: "material_id",
     });
   }
 }

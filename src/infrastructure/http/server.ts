@@ -35,7 +35,7 @@ import { UnidadeMedidaDBRepository } from "../repositories/unidadeMedida/unidade
   const clienteService = new ClienteService(new ClienteDBRepository());
   const usuarioService = new UsuarioService(new UsuarioDBRepository());
   const produtoService = new ProdutoService(new ProdutoDBRepository());
-  const materialService = new MaterialService(new MaterialDBRepository());
+  const materialService = new MaterialService(new MaterialDBRepository(), new UnidadeMedidaDBRepository());
   const unidadeMedidaService = new UnidadeMedidaService(new UnidadeMedidaDBRepository());
   const loginService = new LoginService();
 

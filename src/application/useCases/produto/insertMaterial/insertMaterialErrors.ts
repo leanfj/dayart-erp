@@ -1,7 +1,7 @@
 import { UseCaseError } from "../../../../core/domain/useCaseError"
 import { Result } from "../../../../core/logic/result"
 
-export namespace CreateMaterialErrors {
+export namespace InsertMaterialErrors {
 
   export class MaterialAlreadyExists extends Result<UseCaseError> {    
     constructor (titulo: string) {
@@ -11,15 +11,11 @@ export namespace CreateMaterialErrors {
     }
   }
 
-
-  export class UnidadeMedidaDoesNotExists extends Result<UseCaseError> {    
+  export class ProdutoNotExists extends Result<UseCaseError> {    
     constructor () {
       super(false, {
-        message: `The Unidade de Medida do not exists`
+        message: `The Produto not exists`
       } as UseCaseError)
     }
   }
-
-  
-
 }

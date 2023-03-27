@@ -5,12 +5,15 @@ import {
   InferAttributes,
   Model,
   Sequelize,
+  BelongsToManyAddAssociationMixin,
 } from "sequelize";
+import { MaterialModel } from "./material.model";
 
 export class ProdutoModel extends Model<
   InferAttributes<ProdutoModel>,
   InferCreationAttributes<ProdutoModel>
 > {
+
   declare id: CreationOptional<string>;
   declare titulo: string | null;
   declare descricao: string | null;
@@ -20,6 +23,7 @@ export class ProdutoModel extends Model<
   declare prazoProducao: string | null;
   declare dataCadastro: CreationOptional<Date | null>;
   declare dataAtualizacao: CreationOptional<Date | null>;
+  declare addMateriais: BelongsToManyAddAssociationMixin<MaterialModel, string>;
 
   static initModel(sequelize: Sequelize): typeof ProdutoModel {
     ProdutoModel.init(
@@ -74,4 +78,15 @@ export class ProdutoModel extends Model<
 
     return ProdutoModel;
   }
+
+
+  static associate(models: any) {
+
+    ProdutoModel.belongsToMany(models.MaterialModel, {
+      through: "materiais_produtos",
+      as: "materiais",
+      foreignKey: "produto_id"
+    });
+  }
+
 }

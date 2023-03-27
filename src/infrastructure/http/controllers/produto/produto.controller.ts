@@ -38,6 +38,12 @@ export class ProdutoController extends BaseController {
         this.update(request, response, next)
     );
 
+    this.router.post(
+      `${this.path}/:id`,
+      (request: Request, response: Response, next: NextFunction) =>
+        this.insertMaterial(request, response, next)
+    );
+
     this.router.delete(
       `${this.path}/:id`,
       (request: Request, response: Response, next: NextFunction) =>
@@ -133,4 +139,26 @@ export class ProdutoController extends BaseController {
       return this.fail(response, err);
     }
   }
+
+  async insertMaterial(request: Request, response: Response, next: NextFunction) {
+    const material = request.body;
+    const id = request.params.id;
+    try {
+      const result = await this.produtoService.insertMaterial(
+        material,
+        new UniqueEntityID(id)
+      );
+      if (result.isLeft()) {
+        if (result.value instanceof UpdateProdutoErrors.ProdutoNotExists) {
+          return this.notFound(response, result.value.getErrorValue().message);
+        }
+        return this.fail(response, result.value.getErrorValue().message);
+      } else {
+        return this.ok(response, result);
+      }
+    } catch (err) {
+      return this.fail(response, err);
+    }
+  }
+
 }

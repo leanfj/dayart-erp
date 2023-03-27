@@ -1,11 +1,19 @@
 import { UniqueEntityID } from "../../../core/domain/uniqueIdEntity";
-import { Either, Result, left, right } from "../../../core/logic/result";
+import {
+  Either,
+  Left,
+  Result,
+  Right,
+  left,
+  right,
+} from "../../../core/logic/result";
 import { AppError } from "../../../core/shared/appError";
 import { Produto } from "../../../domain/entities/produto/produto.entity";
 import { ProdutoMapper } from "../../../domain/mappers/produto/produto.mapper";
 import { ProdutoRepository } from "../../../domain/repositories/produto/produto.repository";
-import { ProdutoModel } from "../../database/models";
+import { MaterialModel, ProdutoModel } from "../../database/models";
 import { ProdutoRepositoryErrors } from "./produtoRepositoryErrors";
+import { MaterialRepositoryErrors } from "../material/materialRepositoryErrors";
 
 type Response = Either<AppError.UnexpectedError, Result<Produto | Produto[]>>;
 
@@ -16,6 +24,13 @@ export class ProdutoDBRepository implements ProdutoRepository {
     try {
       const produtoData = await ProdutoModel.findAll({
         raw: true,
+        include: [
+          {
+            model: MaterialModel,
+            as: "materiais",
+            attributes: ["id", "titulo", "descricao", "valor"],
+          },
+        ],
       });
       if (produtoData.length === 0) {
         return left(new ProdutoRepositoryErrors.ProdutoListEmpty());
@@ -118,6 +133,33 @@ export class ProdutoDBRepository implements ProdutoRepository {
       });
 
       return right(Result.ok<Produto>());
+    } catch (error) {
+      return left(new AppError.UnexpectedError(error));
+    }
+  }
+
+  async insertMaterial(id: string, input: any): Promise<Response> {
+    try {
+      const produtoData = await ProdutoModel.findByPk(id.toString());
+      const materialData = await MaterialModel.findByPk(input.material.id.toString());
+
+      if (!produtoData) {
+        return left(new ProdutoRepositoryErrors.ProdutoNotExists());
+      }
+
+      if (!materialData) {
+        return left(new MaterialRepositoryErrors.MaterialNotExists());
+      }
+      
+      const updatedProduto = await produtoData.addMateriais(materialData, {
+        returning: true,
+      });
+
+      return right(
+        Result.ok<Produto>(
+          ProdutoMapper.toDomain(updatedProduto[1][0].dataValues)
+        )
+      );
     } catch (error) {
       return left(new AppError.UnexpectedError(error));
     }

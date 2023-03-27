@@ -13,7 +13,6 @@ export class ProdutoInputDTO {
   valorVenda: number;
   @IsNotEmpty()
   valorCusto: number;
-  @IsNotEmpty()
   materiais: Material[];
   @IsNotEmpty()
   prazoProducao: string;

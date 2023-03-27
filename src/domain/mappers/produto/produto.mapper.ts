@@ -15,6 +15,8 @@ export abstract class ProdutoMapper implements Mapper<Produto> {
         valorCusto: raw.valorCusto,
         materiais: raw.materiais,
         prazoProducao: raw.prazoProducao,
+        dataCadastro: raw.dataCadastro,
+        dataAtualizacao: raw.dataAtualizacao,
     }, new UniqueEntityID(raw.id))
 
     return produto;

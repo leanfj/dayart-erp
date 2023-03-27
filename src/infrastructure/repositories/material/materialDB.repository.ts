@@ -25,9 +25,6 @@ export class MaterialDBRepository implements MaterialRepository {
           },
         ],
       });
-      if (materialData.length === 0) {
-        return left(new MaterialRepositoryErrors.MaterialListEmpty());
-      }
 
       const materials = materialData.map((material) => {
         return MaterialMapper.toDomain(material);

@@ -31,4 +31,9 @@ export function initAssociations(sequelize: Sequelize) {
       [key: string]: any;
     }
   );
+  ProdutoModel.associate(
+    sequelize.models as {
+      [key: string]: any;
+    }
+  );
 }

@@ -8,6 +8,7 @@ import {
   BelongsToManyAddAssociationMixin,
 } from "sequelize";
 import { MaterialModel } from "./material.model";
+import { MaterialProdutoModel } from "./materialProduto.model";
 
 export class ProdutoModel extends Model<
   InferAttributes<ProdutoModel>,
@@ -19,7 +20,7 @@ export class ProdutoModel extends Model<
   declare descricao: string | null;
   declare codigo: string | null;
   declare valorVenda: number | null;
-  declare valorCusto: string | null;
+  declare valorCusto: number | null;
   declare prazoProducao: string | null;
   declare dataCadastro: CreationOptional<Date | null>;
   declare dataAtualizacao: CreationOptional<Date | null>;
@@ -83,10 +84,15 @@ export class ProdutoModel extends Model<
   static associate(models: any) {
 
     ProdutoModel.belongsToMany(models.MaterialModel, {
-      through: "materiais_produtos",
+      through: MaterialProdutoModel,
       as: "materiais",
       foreignKey: "produto_id"
     });
+
+    ProdutoModel.hasMany(models.MaterialProdutoModel, {
+      foreignKey: "produto_id",
+      as: "materiais_produtos"
+    })
   }
 
 }

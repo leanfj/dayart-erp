@@ -6,6 +6,7 @@ import {
   Model,
   Sequelize,
 } from "sequelize";
+import { MaterialProdutoModel } from "./materialProduto.model";
 
 export class UnidadeMedidaModel extends Model<
   InferAttributes<UnidadeMedidaModel>,
@@ -44,9 +45,7 @@ export class UnidadeMedidaModel extends Model<
         },
         dataAtualizacao: {
           type: "TIMESTAMP",
-          defaultValue: sequelize.literal(
-            "CURRENT_TIMESTAMP"
-          ),
+          defaultValue: sequelize.literal("CURRENT_TIMESTAMP"),
           allowNull: false,
         },
       },
@@ -59,8 +58,14 @@ export class UnidadeMedidaModel extends Model<
       }
     );
 
-
     return UnidadeMedidaModel;
   }
 
+  static associate(models: any) {
+    UnidadeMedidaModel.hasMany(models.MaterialProdutoUnidadeMedidaModel, {
+      foreignKey: "unidade_medida_id",
+      as: "materiais_produtos_unidades_medidas",
+    });
+
+  }
 }

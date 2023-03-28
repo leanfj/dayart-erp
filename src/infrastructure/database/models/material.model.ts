@@ -8,6 +8,7 @@ import {
   ForeignKey,
 } from "sequelize";
 import { UnidadeMedidaModel } from "./unidadeMedida.model";
+import { MaterialProdutoModel } from "./materialProduto.model";
 
 export class MaterialModel extends Model<
   InferAttributes<MaterialModel>,
@@ -83,9 +84,14 @@ export class MaterialModel extends Model<
     });
 
     MaterialModel.belongsToMany(models.ProdutoModel, {
-      through: "materiais_produtos",
+      through: MaterialProdutoModel,
       as: "produtos",
       foreignKey: "material_id",
+    });
+
+    MaterialModel.hasMany(models.MaterialProdutoModel, {
+      foreignKey: "material_id",
+      as: "materiaisProdutos",
     });
   }
 }

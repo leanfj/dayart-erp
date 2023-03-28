@@ -11,9 +11,16 @@ import { AppError } from "../../../core/shared/appError";
 import { Produto } from "../../../domain/entities/produto/produto.entity";
 import { ProdutoMapper } from "../../../domain/mappers/produto/produto.mapper";
 import { ProdutoRepository } from "../../../domain/repositories/produto/produto.repository";
-import { MaterialModel, ProdutoModel } from "../../database/models";
+import {
+  MaterialModel,
+  ProdutoModel,
+  UnidadeMedidaModel,
+} from "../../database/models";
 import { ProdutoRepositoryErrors } from "./produtoRepositoryErrors";
 import { MaterialRepositoryErrors } from "../material/materialRepositoryErrors";
+import { Material } from "../../../domain/entities/material/material.entity";
+import { UnidadeMedida } from "../../../domain/entities/unidadeMedida/unidadeMedida.entity";
+import { MaterialMapper } from "../../../domain/mappers/material/material.mapper";
 
 type Response = Either<AppError.UnexpectedError, Result<Produto | Produto[]>>;
 
@@ -141,7 +148,30 @@ export class ProdutoDBRepository implements ProdutoRepository {
   async insertMaterial(id: string, input: any): Promise<Response> {
     try {
       const produtoData = await ProdutoModel.findByPk(id.toString());
-      const materialData = await MaterialModel.findByPk(input.material.id.toString());
+      const materialData = await MaterialModel.findByPk(
+        input.material.id.toString()
+      );
+      const unidadeMedidaData = await UnidadeMedidaModel.findByPk(
+        input.unidadeMedida.id.toString()
+      );
+
+      const material = Material.create(
+        {
+          titulo: materialData.titulo,
+          descricao: materialData.descricao,
+          valor: materialData.valor,
+          unidadeMedida: UnidadeMedida.create(
+            {
+              nome: unidadeMedidaData.nome,
+              nomenclatura: unidadeMedidaData.nomenclatura,
+              categoria: unidadeMedidaData.categoria,
+            },
+            new UniqueEntityID(unidadeMedidaData.id.toString())
+          ),
+          quantidade: input.material.quantidade,
+        },
+        new UniqueEntityID(materialData.id.toString())
+      );
 
       if (!produtoData) {
         return left(new ProdutoRepositoryErrors.ProdutoNotExists());
@@ -150,14 +180,14 @@ export class ProdutoDBRepository implements ProdutoRepository {
       if (!materialData) {
         return left(new MaterialRepositoryErrors.MaterialNotExists());
       }
-      
+
       const updatedProduto = await produtoData.addMateriais(materialData, {
         returning: true,
       });
 
       return right(
         Result.ok<Produto>(
-          ProdutoMapper.toDomain(updatedProduto[1][0].dataValues)
+          ProdutoMapper.toDomain(updatedProduto[0].dataValues)
         )
       );
     } catch (error) {

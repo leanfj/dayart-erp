@@ -5,6 +5,7 @@ import { ProdutoModel} from "./produto.model";
 import { TokenModel } from "./token.model";
 import { MaterialModel } from "./material.model";
 import { UnidadeMedidaModel } from "./unidadeMedida.model";
+import { MaterialProdutoModel } from "./materialProduto.model";
 
 export { ClienteModel, UsuarioModel, TokenModel, ProdutoModel, MaterialModel, UnidadeMedidaModel };
 
@@ -15,13 +16,15 @@ export function initModels(sequelize: Sequelize) {
   ProdutoModel.initModel(sequelize);
   MaterialModel.initModel(sequelize);
   UnidadeMedidaModel.initModel(sequelize);
+  MaterialProdutoModel.initModel(sequelize);
   return {
     ClienteModel,
     UsuarioModel,
     TokenModel,
     ProdutoModel,
     MaterialModel,
-    UnidadeMedidaModel
+    UnidadeMedidaModel,
+    MaterialProdutoModel,
   };
 }
 
@@ -32,6 +35,11 @@ export function initAssociations(sequelize: Sequelize) {
     }
   );
   ProdutoModel.associate(
+    sequelize.models as {
+      [key: string]: any;
+    }
+  );
+  MaterialProdutoModel.associate(
     sequelize.models as {
       [key: string]: any;
     }

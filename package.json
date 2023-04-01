@@ -16,6 +16,12 @@
     "migrate:test": "NODE_ENV=test dotenv -e .env sequelize db:migrate --env test",
     "migrate:prod": "NODE_ENV=production dotenv -e .env.prod sequelize db:migrate --env production"
   },
+  "nodemonConfig": {
+    "ignore": [
+      "node_modules"
+    ],
+    "delay": "2500"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

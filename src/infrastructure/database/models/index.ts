@@ -1,13 +1,24 @@
-import type { Sequelize} from "sequelize";
+import type { Sequelize } from "sequelize";
 import { ClienteModel } from "./cliente.model";
 import { UsuarioModel } from "./usuario.model";
-import { ProdutoModel} from "./produto.model";
+import { ProdutoModel } from "./produto.model";
 import { TokenModel } from "./token.model";
 import { MaterialModel } from "./material.model";
 import { UnidadeMedidaModel } from "./unidadeMedida.model";
 import { MaterialProdutoModel } from "./materialProduto.model";
+import { MaterialProdutoUnidadeMedidaModel } from "./materialProdutoUnidadeMedida.model";
 
-export { ClienteModel, UsuarioModel, TokenModel, ProdutoModel, MaterialModel, UnidadeMedidaModel };
+export {
+  ClienteModel,
+  UsuarioModel,
+  TokenModel,
+  ProdutoModel,
+  MaterialModel,
+  UnidadeMedidaModel,
+  MaterialProdutoModel,
+  MaterialProdutoUnidadeMedidaModel,
+
+};
 
 export function initModels(sequelize: Sequelize) {
   ClienteModel.initModel(sequelize);
@@ -17,6 +28,7 @@ export function initModels(sequelize: Sequelize) {
   MaterialModel.initModel(sequelize);
   UnidadeMedidaModel.initModel(sequelize);
   MaterialProdutoModel.initModel(sequelize);
+  MaterialProdutoUnidadeMedidaModel.initModel(sequelize);
   return {
     ClienteModel,
     UsuarioModel,
@@ -25,6 +37,7 @@ export function initModels(sequelize: Sequelize) {
     MaterialModel,
     UnidadeMedidaModel,
     MaterialProdutoModel,
+    MaterialProdutoUnidadeMedidaModel,
   };
 }
 
@@ -40,6 +53,11 @@ export function initAssociations(sequelize: Sequelize) {
     }
   );
   MaterialProdutoModel.associate(
+    sequelize.models as {
+      [key: string]: any;
+    }
+  );
+  MaterialProdutoUnidadeMedidaModel.associate(
     sequelize.models as {
       [key: string]: any;
     }

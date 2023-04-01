@@ -148,47 +148,45 @@ export class ProdutoDBRepository implements ProdutoRepository {
   async insertMaterial(id: string, input: any): Promise<Response> {
     try {
       const produtoData = await ProdutoModel.findByPk(id.toString());
-      const materialData = await MaterialModel.findByPk(
-        input.material.id.toString()
-      );
-      const unidadeMedidaData = await UnidadeMedidaModel.findByPk(
-        input.unidadeMedida.id.toString()
-      );
+      // const materialData = await MaterialModel.findByPk(
+      //   input.material.id.toString()
+      // );
+      // const unidadeMedidaData = await UnidadeMedidaModel.findByPk(
+      //   input.unidadeMedida.id.toString()
+      // );
 
-      const material = Material.create(
-        {
-          titulo: materialData.titulo,
-          descricao: materialData.descricao,
-          valor: materialData.valor,
-          unidadeMedida: UnidadeMedida.create(
-            {
-              nome: unidadeMedidaData.nome,
-              nomenclatura: unidadeMedidaData.nomenclatura,
-              categoria: unidadeMedidaData.categoria,
-            },
-            new UniqueEntityID(unidadeMedidaData.id.toString())
-          ),
+      // if (!produtoData) {
+      //   return left(new ProdutoRepositoryErrors.ProdutoNotExists());
+      // }
+
+      // if (!materialData) {
+      //   return left(new MaterialRepositoryErrors.MaterialNotExists());
+      // }
+
+      const produtoMaterial = await produtoData.addMateriais(input.material.id.toString(), {
+        through: {
           quantidade: input.material.quantidade,
+          unidade_medida_id: input.unidadeMedida.id.toString(),
         },
-        new UniqueEntityID(materialData.id.toString())
-      );
-
-      if (!produtoData) {
-        return left(new ProdutoRepositoryErrors.ProdutoNotExists());
-      }
-
-      if (!materialData) {
-        return left(new MaterialRepositoryErrors.MaterialNotExists());
-      }
-
-      const updatedProduto = await produtoData.addMateriais(materialData, {
         returning: true,
+        include: [
+          {
+            model: MaterialModel,
+            as: "material",
+          },
+          {
+            model: UnidadeMedidaModel,
+            as: "unidadeMedida",
+          },
+          {
+            model: ProdutoModel,
+            as: "produto",
+          }
+        ]
       });
-
+      
       return right(
-        Result.ok<Produto>(
-          ProdutoMapper.toDomain(updatedProduto[0].dataValues)
-        )
+        Result.ok<Produto>(ProdutoMapper.toDomain(produtoMaterial[0].dataValues))
       );
     } catch (error) {
       return left(new AppError.UnexpectedError(error));

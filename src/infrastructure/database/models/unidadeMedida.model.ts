@@ -6,7 +6,7 @@ import {
   Model,
   Sequelize,
 } from "sequelize";
-import { MaterialProdutoModel } from "./materialProduto.model";
+import { MaterialProdutoUnidadeMedidaModel } from "./materialProdutoUnidadeMedida.model";
 
 export class UnidadeMedidaModel extends Model<
   InferAttributes<UnidadeMedidaModel>,
@@ -62,10 +62,34 @@ export class UnidadeMedidaModel extends Model<
   }
 
   static associate(models: any) {
-    UnidadeMedidaModel.hasMany(models.MaterialProdutoUnidadeMedidaModel, {
-      foreignKey: "unidade_medida_id",
-      as: "materiais_produtos_unidades_medidas",
+    UnidadeMedidaModel.belongsToMany(models.ProdutoModel, {
+      through: {
+        model: MaterialProdutoUnidadeMedidaModel,
+        unique: false
+      },
+      as: "produtos",
+      foreignKey: "produto_id",
+      otherKey: "unidade_medida_id"
     });
 
+    UnidadeMedidaModel.belongsToMany(models.MaterialModel, {
+      through: {
+        model: MaterialProdutoUnidadeMedidaModel,
+        unique: false
+      },
+      as: "materiais",
+      foreignKey: "material_id",
+      otherKey: "unidade_medida_id"
+    });
+
+    UnidadeMedidaModel.hasMany(models.MaterialProdutoUnidadeMedidaModel, {
+      foreignKey: "unidade_medida_id",
+      as: "unidadeMedida",
+    });
+
+    // UnidadeMedidaModel.hasMany(models.MaterialProdutoUnidadeMedidaModel, {
+    //   foreignKey: "unidade_medida_id",
+    //   as: "materialProdutoUnidadeMedida",
+    // });
   }
 }

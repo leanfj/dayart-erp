@@ -13,7 +13,7 @@ export abstract class ProdutoMapper implements Mapper<Produto> {
         descricao: raw.descricao,
         valorVenda: raw.valorVenda,
         valorCusto: raw.valorCusto,
-        materiais: raw.materiais,
+        materiais: raw.materiaisProduto?.map((material: any) => material.dataValues),
         prazoProducao: raw.prazoProducao,
         dataCadastro: raw.dataCadastro,
         dataAtualizacao: raw.dataAtualizacao,

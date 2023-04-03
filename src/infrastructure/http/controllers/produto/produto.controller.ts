@@ -20,35 +20,48 @@ export class ProdutoController extends BaseController {
   }
 
   private async initializeRoutes() {
+    // this.router.all(
+    //   `${this.path}/*`,
+    //   ensureAuthenticated(),
+    //   (request: Request, response: Response, next: NextFunction) => {}
+    // )
     this.router.post(
       `${this.path}`,
+      ensureAuthenticated(),
       (request: Request, response: Response, next: NextFunction) =>
         this.create(request, response, next)
-    );
+    )
+    this.router.post(
+      `${this.path}/:id`,
+      ensureAuthenticated(),
+      (request: Request, response: Response, next: NextFunction) =>
+        this.insertMaterial(request, response, next)
+    )
     this.router.get(
       `${this.path}`,
       ensureAuthenticated(),
       (request: Request, response: Response, next: NextFunction) =>
-        this.getAll(request, response, next)
-    );
-
+      this.getAll(request, response, next)
+    )
+    this.router.get(
+      `${this.path}/:id`,
+      ensureAuthenticated(),
+      async (request: Request, response: Response, next: NextFunction) =>
+        await this.getById(request, response, next)
+    )
     this.router.patch(
       `${this.path}/:id`,
+      ensureAuthenticated(),
       (request: Request, response: Response, next: NextFunction) =>
         this.update(request, response, next)
-    );
-
-    this.router.post(
-      `${this.path}/:id`,
-      (request: Request, response: Response, next: NextFunction) =>
-        this.insertMaterial(request, response, next)
-    );
-
+    )
     this.router.delete(
       `${this.path}/:id`,
+      ensureAuthenticated(),
       (request: Request, response: Response, next: NextFunction) =>
         this.delete(request, response, next)
     );
+
     // this.router.get(
     //   `${this.path}/DocEntry/:docEntry`,
     //   (request: Request, response: Response, next: NextFunction) =>
@@ -75,6 +88,22 @@ export class ProdutoController extends BaseController {
       }
     } catch (err) {
       return this.fail(res, err);
+    }
+  }
+
+
+  async getById(request: Request, response: Response, next: NextFunction) {
+    const id = request.params.id;
+    try {
+      const result = await this.produtoService.getById(new UniqueEntityID(id));
+      if (result.isLeft()) {
+        return this.fail(response, result.value.getErrorValue().message);
+      } else {
+        const produto = result.value.getValue();
+        return this.ok(response, produto);
+      }
+    } catch (err) {
+      return this.fail(response, err);
     }
   }
 

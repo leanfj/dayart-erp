@@ -17,10 +17,6 @@ import {
   UnidadeMedidaModel,
 } from "../../database/models";
 import { ProdutoRepositoryErrors } from "./produtoRepositoryErrors";
-import { MaterialRepositoryErrors } from "../material/materialRepositoryErrors";
-import { Material } from "../../../domain/entities/material/material.entity";
-import { UnidadeMedida } from "../../../domain/entities/unidadeMedida/unidadeMedida.entity";
-import { MaterialMapper } from "../../../domain/mappers/material/material.mapper";
 
 type Response = Either<AppError.UnexpectedError, Result<Produto | Produto[]>>;
 
@@ -30,14 +26,8 @@ export class ProdutoDBRepository implements ProdutoRepository {
   async findAll(): Promise<Response> {
     try {
       const produtoData = await ProdutoModel.findAll({
-        raw: true,
-        include: [
-          {
-            model: MaterialModel,
-            as: "materiais",
-            attributes: ["id", "titulo", "descricao", "valor"],
-          },
-        ],
+        nest: true,
+
       });
       if (produtoData.length === 0) {
         return left(new ProdutoRepositoryErrors.ProdutoListEmpty());
@@ -55,7 +45,11 @@ export class ProdutoDBRepository implements ProdutoRepository {
 
   async findById(id: UniqueEntityID): Promise<Response> {
     try {
-      const produtoData = await ProdutoModel.findByPk(id.toString());
+      const produtoData = await ProdutoModel.findByPk(id.toString(), {
+        include: {
+          association: "materiaisProduto"
+        },
+      });
 
       if (!produtoData) {
         return left(new ProdutoRepositoryErrors.ProdutoNotExists());
@@ -163,30 +157,35 @@ export class ProdutoDBRepository implements ProdutoRepository {
       //   return left(new MaterialRepositoryErrors.MaterialNotExists());
       // }
 
-      const produtoMaterial = await produtoData.addMateriais(input.material.id.toString(), {
-        through: {
-          quantidade: input.material.quantidade,
-          unidade_medida_id: input.unidadeMedida.id.toString(),
-        },
-        returning: true,
-        include: [
-          {
-            model: MaterialModel,
-            as: "material",
+      const produtoMaterial = await produtoData.addMateriais(
+        input.material.id.toString(),
+        {
+          through: {
+            quantidade: input.material.quantidade,
+            unidade_medida_id: input.unidadeMedida.id.toString(),
           },
-          {
-            model: UnidadeMedidaModel,
-            as: "unidadeMedida",
-          },
-          {
-            model: ProdutoModel,
-            as: "produto",
-          }
-        ]
-      });
-      
+          returning: true,
+          include: [
+            {
+              model: MaterialModel,
+              as: "material",
+            },
+            {
+              model: UnidadeMedidaModel,
+              as: "unidadeMedida",
+            },
+            {
+              model: ProdutoModel,
+              as: "produto",
+            },
+          ],
+        }
+      );
+
       return right(
-        Result.ok<Produto>(ProdutoMapper.toDomain(produtoMaterial[0].dataValues))
+        Result.ok<Produto>(
+          ProdutoMapper.toDomain(produtoMaterial[0].dataValues)
+        )
       );
     } catch (error) {
       return left(new AppError.UnexpectedError(error));

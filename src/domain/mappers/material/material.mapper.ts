@@ -29,7 +29,7 @@ export abstract class MaterialMapper implements Mapper<Material> {
         codigo: material.codigo,
         descricao: material.descricao,
         valor: material.valor,
-        unidadeMedidaId: material.unidadeMedida.id.toString(),
+        unidade_medida_id: material.unidadeMedida.id.toString(),
         quantidade: material.quantidade,
         valorUnitario: material.valorUnitario,
     }

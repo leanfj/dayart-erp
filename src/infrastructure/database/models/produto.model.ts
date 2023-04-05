@@ -105,7 +105,7 @@ export class ProdutoModel extends Model<
 
     ProdutoModel.hasMany(models.MaterialProdutoUnidadeMedidaModel, {
       foreignKey: "produto_id",
-      as: "materiaisProduto",
+      as: "materiaisProdutosUnidadesMedidas",
     });
 
     // ProdutoModel.hasMany(models.MaterialProdutoModel, {

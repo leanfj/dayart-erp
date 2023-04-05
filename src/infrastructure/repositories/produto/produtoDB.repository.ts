@@ -13,6 +13,7 @@ import { ProdutoMapper } from "../../../domain/mappers/produto/produto.mapper";
 import { ProdutoRepository } from "../../../domain/repositories/produto/produto.repository";
 import {
   MaterialModel,
+  MaterialProdutoUnidadeMedidaModel,
   ProdutoModel,
   UnidadeMedidaModel,
 } from "../../database/models";
@@ -27,7 +28,20 @@ export class ProdutoDBRepository implements ProdutoRepository {
     try {
       const produtoData = await ProdutoModel.findAll({
         nest: true,
-
+        include: {
+          model: MaterialProdutoUnidadeMedidaModel,
+          as: "materiaisProdutosUnidadesMedidas",
+          include: [
+            {
+              model: MaterialModel,
+              as: "material",
+            },
+            {
+              model: UnidadeMedidaModel,
+              as: "unidadeMedida",
+            },
+          ],
+        },
       });
       if (produtoData.length === 0) {
         return left(new ProdutoRepositoryErrors.ProdutoListEmpty());
@@ -47,7 +61,18 @@ export class ProdutoDBRepository implements ProdutoRepository {
     try {
       const produtoData = await ProdutoModel.findByPk(id.toString(), {
         include: {
-          association: "materiaisProduto"
+          model: MaterialProdutoUnidadeMedidaModel,
+          as: "materiaisProdutosUnidadesMedidas",
+          include: [
+            {
+              model: MaterialModel,
+              as: "material",
+            },
+            {
+              model: UnidadeMedidaModel,
+              as: "unidadeMedida",
+            },
+          ],
         },
       });
 
@@ -157,7 +182,7 @@ export class ProdutoDBRepository implements ProdutoRepository {
       //   return left(new MaterialRepositoryErrors.MaterialNotExists());
       // }
 
-      const produtoMaterial = await produtoData.addMateriais(
+      const produtoMaterial: any = await produtoData.addMateriais(
         input.material.id.toString(),
         {
           through: {
@@ -184,7 +209,11 @@ export class ProdutoDBRepository implements ProdutoRepository {
 
       return right(
         Result.ok<Produto>(
-          ProdutoMapper.toDomain(produtoMaterial[0].dataValues)
+          ProdutoMapper.toDomain(
+            produtoMaterial.length > 1
+              ? produtoMaterial[1][0].dataValues
+              : produtoMaterial[0].dataValues
+          )
         )
       );
     } catch (error) {

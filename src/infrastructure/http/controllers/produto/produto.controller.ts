@@ -9,6 +9,7 @@ import { UpdateProdutoErrors } from "../../../../application/useCases/produto/up
 import { DeleteProdutoErrors } from "../../../../application/useCases/produto/deleteProduto/deleteProdutoErrors";
 import { ValidatorDTOErrors } from "../../../../core/domain/validatorDTOErros";
 import { ensureAuthenticated } from "../../middlewares/ensureAuthenticated.middleware";
+import { Produto } from "domain/entities/produto/produto.entity";
 
 export class ProdutoController extends BaseController {
   public path = "/produtos";
@@ -99,8 +100,8 @@ export class ProdutoController extends BaseController {
       if (result.isLeft()) {
         return this.fail(response, result.value.getErrorValue().message);
       } else {
-        const produto = result.value.getValue();
-        return this.ok(response, produto);
+        const produto = result.value.getValue() as Produto;
+        return this.ok(response, produto.props.materiais);
       }
     } catch (err) {
       return this.fail(response, err);
@@ -170,7 +171,7 @@ export class ProdutoController extends BaseController {
   }
 
   async insertMaterial(request: Request, response: Response, next: NextFunction) {
-    const material = request.body;
+    const material = JSON.parse(decodeURIComponent(request.body).replace(/values=/g, ''));
     const id = request.params.id;
     try {
       const result = await this.produtoService.insertMaterial(

@@ -117,7 +117,7 @@ export class ProdutoDBRepository implements ProdutoRepository {
 
   async update(id: string, input: any): Promise<Response> {
     try {
-      const produtoData = await this.findById(new UniqueEntityID(id));
+      const produtoData =  await ProdutoModel.findByPk(id);
 
       if (!produtoData) {
         return left(new ProdutoRepositoryErrors.ProdutoNotExists());
@@ -186,7 +186,7 @@ export class ProdutoDBRepository implements ProdutoRepository {
         input.material.id.toString(),
         {
           through: {
-            quantidade: input.material.quantidade,
+            quantidade: input.quantidade,
             unidade_medida_id: input.unidadeMedida.id.toString(),
           },
           returning: true,

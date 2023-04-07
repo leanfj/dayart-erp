@@ -73,7 +73,7 @@ export class ClienteController extends BaseController {
   }
 
   async create(request: Request, response: Response, next: NextFunction) {
-    const cliente = request.body;
+    const cliente = JSON.parse(decodeURIComponent(request.body));
     try {
       const result = await this.clienteService.create(cliente);
 
@@ -97,7 +97,7 @@ export class ClienteController extends BaseController {
   }
 
   async update(request: Request, response: Response, next: NextFunction) {
-    const cliente = request.body;
+    const cliente = JSON.parse(decodeURIComponent(request.body));
     const id = request.params.id;
     try {
       const result = await this.clienteService.update(

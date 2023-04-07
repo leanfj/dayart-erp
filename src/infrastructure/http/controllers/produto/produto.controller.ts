@@ -109,7 +109,7 @@ export class ProdutoController extends BaseController {
   }
 
   async create(request: Request, response: Response, next: NextFunction) {
-    const produto = request.body;
+    const produto = JSON.parse(decodeURIComponent(request.body));
     try {
       const result = await this.produtoService.create(produto);
 
@@ -133,7 +133,7 @@ export class ProdutoController extends BaseController {
   }
 
   async update(request: Request, response: Response, next: NextFunction) {
-    const produto = request.body;
+    const produto = JSON.parse(decodeURIComponent(request.body));
     const id = request.params.id;
     try {
       const result = await this.produtoService.update(

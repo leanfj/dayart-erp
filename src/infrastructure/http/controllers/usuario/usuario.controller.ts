@@ -53,7 +53,7 @@ export class UsuarioController extends BaseController {
   }
 
   async create(request: Request, response: Response, next: NextFunction) {
-    const usuario = request.body;
+    const usuario = JSON.parse(decodeURIComponent(request.body));
 
     if(usuario.password !== usuario.passwordConfirm) {
       return this.invalidInput(response, "Password and password confirm not match");
@@ -102,7 +102,7 @@ export class UsuarioController extends BaseController {
   }
 
   // async update(request: Request, response: Response, next: NextFunction) {
-  //   const cliente = request.body;
+  //   const cliente = JSON.parse(decodeURIComponent(request.body);
   //   const id = request.params.id;
   //   try {
   //     const result = await this.clienteService.update(

@@ -76,7 +76,7 @@ export class UnidadeMedidaController extends BaseController {
   }
 
   async create(request: Request, response: Response, next: NextFunction) {
-    const unidadeMedida = request.body;
+    const unidadeMedida = JSON.parse(decodeURIComponent(request.body));
     try {
       const result = await this.unidadeMedidaService.create(unidadeMedida);
 
@@ -100,7 +100,7 @@ export class UnidadeMedidaController extends BaseController {
   }
 
   async update(request: Request, response: Response, next: NextFunction) {
-    const unidadeMedida = request.body;
+    const unidadeMedida = JSON.parse(decodeURIComponent(request.body));
     const id = request.params.id;
     try {
       const result = await this.unidadeMedidaService.update(

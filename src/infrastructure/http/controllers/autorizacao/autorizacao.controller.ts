@@ -71,7 +71,7 @@ export class AutorizacaoController extends BaseController {
   }
 
   async login(request: Request, response: Response, next: NextFunction) {
-    const login = request.body;
+    const login = JSON.parse(decodeURIComponent(request.body));
 
     const validOrError = await validatorDTO(LoginInputDTO, login, {});
     if (validOrError.isLeft()) {
@@ -129,7 +129,7 @@ export class AutorizacaoController extends BaseController {
     response: Response,
     next: NextFunction
   ) {
-    const email = request.body;
+    const email = JSON.parse(decodeURIComponent(request.body));
     try {
       const result = await this.loginService.requestResetPassword(email.email);
 
@@ -148,7 +148,7 @@ export class AutorizacaoController extends BaseController {
     response: Response,
     next: NextFunction
   ) {
-    const input = request.body;
+    const input = JSON.parse(decodeURIComponent(request.body));
     try {
       const result = await this.loginService.resetPassword(
         input.usuarioId,

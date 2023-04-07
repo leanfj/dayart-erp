@@ -76,7 +76,7 @@ export class MaterialController extends BaseController {
   }
 
   async create(request: Request, response: Response, next: NextFunction) {
-    const material = request.body;
+    const material = JSON.parse(decodeURIComponent(request.body));
     try {
       const result = await this.materialService.create(material);
 
@@ -100,7 +100,7 @@ export class MaterialController extends BaseController {
   }
 
   async update(request: Request, response: Response, next: NextFunction) {
-    const material = request.body;
+    const material = JSON.parse(decodeURIComponent(request.body));
     const id = request.params.id;
     try {
       const result = await this.materialService.update(

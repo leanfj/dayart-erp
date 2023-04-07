@@ -1,10 +1,18 @@
 import { UniqueEntityID } from "../../../core/domain/uniqueIdEntity";
-import { Either, Result, left, right } from "../../../core/logic/result";
+import {
+  Either,
+  Left,
+  Result,
+  Right,
+  left,
+  right,
+} from "../../../core/logic/result";
 import { AppError } from "../../../core/shared/appError";
 import { Produto } from "../../../domain/entities/produto/produto.entity";
 import { ProdutoRepository } from "../../../domain/repositories/produto/produto.repository";
 import { ProdutoRepositoryErrors } from "./produtoRepositoryErrors";
 import { RandomCode } from "../../../core/domain/valueObjects/randomCode";
+import { MaterialInputDTO } from "domain/DTOS/material/material.dto";
 
 type Response = Either<AppError.UnexpectedError, Result<Produto | Produto[]>>;
 
@@ -41,7 +49,9 @@ export class ProdutoInMemoryRepository implements ProdutoRepository {
 
   async findById(id: UniqueEntityID): Promise<Response> {
     try {
-      const produtoData = this.produtos.find((produto) => produto.id.toString() === id.toString());
+      const produtoData = this.produtos.find(
+        (produto) => produto.id.toString() === id.toString()
+      );
       if (!produtoData) {
         return left(new ProdutoRepositoryErrors.ProdutoNotExists());
       }
@@ -63,14 +73,17 @@ export class ProdutoInMemoryRepository implements ProdutoRepository {
 
   async save(input: Produto): Promise<Response> {
     try {
-      const newProduto = Produto.create({
-        titulo: input.titulo,
-        descricao: input.descricao,
-        valorVenda: input.valorVenda,
-        valorCusto: input.valorCusto,
-        materiais: input.materiais,
-        prazoProducao: input.prazoProducao,
-      }, new UniqueEntityID(input.id.toString()));
+      const newProduto = Produto.create(
+        {
+          titulo: input.titulo,
+          descricao: input.descricao,
+          valorVenda: input.valorVenda,
+          valorCusto: input.valorCusto,
+          materiais: input.materiais,
+          prazoProducao: input.prazoProducao,
+        },
+        new UniqueEntityID(input.id.toString())
+      );
 
       this.produtos.push(newProduto);
       return right(Result.ok<Produto>(newProduto));
@@ -81,7 +94,9 @@ export class ProdutoInMemoryRepository implements ProdutoRepository {
 
   async update(id: UniqueEntityID, input: any): Promise<Response> {
     try {
-      const index = this.produtos.findIndex((produto) => produto.id.toString() === id.toString());
+      const index = this.produtos.findIndex(
+        (produto) => produto.id.toString() === id.toString()
+      );
       if (index === -1) {
         return left(new ProdutoRepositoryErrors.ProdutoNotExists());
       }
@@ -94,7 +109,9 @@ export class ProdutoInMemoryRepository implements ProdutoRepository {
 
   async delete(id: UniqueEntityID): Promise<Response> {
     try {
-      const index = this.produtos.findIndex((produto) => produto.id.toString() === id.toString());
+      const index = this.produtos.findIndex(
+        (produto) => produto.id.toString() === id.toString()
+      );
       if (index === -1) {
         return left(new ProdutoRepositoryErrors.ProdutoNotExists());
       }
@@ -102,5 +119,12 @@ export class ProdutoInMemoryRepository implements ProdutoRepository {
     } catch (error) {
       return left(new AppError.UnexpectedError(error));
     }
+  }
+
+  async insertMaterial(
+    id: string | UniqueEntityID,
+    input: MaterialInputDTO
+  ): Promise<Response> {
+    throw new Error("Method not implemented.");
   }
 }

@@ -13,8 +13,10 @@ export abstract class ProdutoMapper implements Mapper<Produto> {
         descricao: raw.descricao,
         valorVenda: raw.valorVenda,
         valorCusto: raw.valorCusto,
-        materiais: raw.materiais,
+        materiais: raw.materiaisProdutosUnidadesMedidas?.map((material: any) => material.dataValues),
         prazoProducao: raw.prazoProducao,
+        dataCadastro: raw.dataCadastro,
+        dataAtualizacao: raw.dataAtualizacao,
     }, new UniqueEntityID(raw.id))
 
     return produto;
@@ -27,7 +29,6 @@ export abstract class ProdutoMapper implements Mapper<Produto> {
         descricao: produto.descricao,
         valorVenda: produto.valorVenda,
         valorCusto: produto.valorCusto,
-        materiais: produto.materiais,
         prazoProducao: produto.prazoProducao,
     }
   }

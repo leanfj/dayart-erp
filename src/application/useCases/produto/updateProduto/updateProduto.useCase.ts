@@ -16,17 +16,17 @@ export class UpdateProdutoUseCase
 
   async execute(input: Request): Promise<Response> {
     try {
-      const produtoData = await this.produtoRepository.findById(
+      const produtoFinded = await this.produtoRepository.findById(
         input.id
       );
 
-      if (produtoData.isLeft()) {
+      if (produtoFinded.isLeft()) {
         return left(
           new UpdateProdutoErrors.ProdutoNotExists()
         );
       }
 
-      await this.produtoRepository.update(input.id, input.props);
+      const produtoData = await this.produtoRepository.update(input.id, input.props);
       
       return right(Result.ok<Produto>(produtoData.value.getValue() as Produto));
     } catch (error) {

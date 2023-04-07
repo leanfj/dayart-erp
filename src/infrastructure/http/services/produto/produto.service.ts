@@ -1,3 +1,4 @@
+import { MaterialInputDTO } from "../../../../domain/DTOS/material/material.dto";
 import { CreateProdutoUseCase } from "../../../../application/useCases/produto/createProduto/createProduto.useCase";
 import { DeleteProdutoUseCase } from "../../../../application/useCases/produto/deleteProduto/deleteProduto.useCase";
 import { GetAllProdutoUseCase } from "../../../../application/useCases/produto/getAllProduto/getAllProduto.usecase";
@@ -9,6 +10,8 @@ import { AppError } from "../../../../core/shared/appError";
 import { ProdutoInputDTO } from "../../../../domain/DTOS/produto/produto.dto";
 import { Produto } from "../../../../domain/entities/produto/produto.entity";
 import { ProdutoRepository } from "../../../../domain/repositories/produto/produto.repository";
+import { InsertMaterialUseCase } from "../../../../application/useCases/produto/insertMaterial/insertMaterial.useCase";
+import { GetByIdProdutoUseCase } from "../../../../application/useCases/produto/getByIdProduto/getByIdProduto.useCase";
 
 type Response = Either<AppError.UnexpectedError, Result<Produto[] | Produto>>;
 
@@ -17,12 +20,18 @@ export class ProdutoService {
   private updateProdutoUseCase: UpdateProdutoUseCase;
   private getAllProdutoUseCase: GetAllProdutoUseCase;
   private deleteProdutoUseCase: DeleteProdutoUseCase;
+  private getByIdProdutoUseCase: GetByIdProdutoUseCase;
+
+  private insertMaterialUseCase: InsertMaterialUseCase;
 
   constructor(readonly produtoRepository: ProdutoRepository) {
     this.createProdutoUseCase = new CreateProdutoUseCase(produtoRepository);
     this.updateProdutoUseCase = new UpdateProdutoUseCase(produtoRepository);
     this.getAllProdutoUseCase = new GetAllProdutoUseCase(produtoRepository);
     this.deleteProdutoUseCase = new DeleteProdutoUseCase(produtoRepository);
+    this.getByIdProdutoUseCase = new GetByIdProdutoUseCase(produtoRepository);
+    this.insertMaterialUseCase = new InsertMaterialUseCase(produtoRepository);
+
   }
 
   public async create(produto: ProdutoInputDTO): Promise<Response> {
@@ -84,6 +93,39 @@ export class ProdutoService {
   public async delete(id: UniqueEntityID): Promise<Response> {
     try {
       const result = await this.deleteProdutoUseCase.execute(id);
+      if (result.isLeft()) {
+        return left(result.value);
+      } else {
+        return right(Result.ok<Produto>(result.value.getValue()));
+      }
+    } catch (error) {
+      return left(new AppError.UnexpectedError(error));
+    }
+  }
+
+  public async getById(id: UniqueEntityID): Promise<Response> {
+    try {
+      const result = await this.getByIdProdutoUseCase.execute(id);
+      if (result.isLeft()) {
+        return left(result.value);
+      } else {
+        return right(Result.ok<Produto>(result.value.getValue()));
+      }
+    } catch (error) {
+      return left(new AppError.UnexpectedError(error));
+    }
+  }
+
+  public async insertMaterial(
+    material: any,
+    id: UniqueEntityID
+  ): Promise<Response> {
+    try {
+      const result = await this.insertMaterialUseCase.execute({
+        props: material,
+        id: id.toString(),
+      });
+
       if (result.isLeft()) {
         return left(result.value);
       } else {

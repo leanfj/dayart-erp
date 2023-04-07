@@ -1,3 +1,4 @@
+import { UnidadeMedidaRepository } from "domain/repositories/unidadeMedida/unidadeMedida.repository";
 import { CreateMaterialUseCase } from "../../../../application/useCases/material/createMaterial/createMaterial.useCase";
 import { DeleteMaterialUseCase } from "../../../../application/useCases/material/deleteMaterial/deleteMaterial.useCase";
 import { GetAllMaterialUseCase } from "../../../../application/useCases/material/getAllMaterial/getAllMaterial.usecase";
@@ -18,8 +19,8 @@ export class MaterialService {
   private getAllMaterialUseCase: GetAllMaterialUseCase;
   private deleteMaterialUseCase: DeleteMaterialUseCase;
 
-  constructor(readonly materialRepository: MaterialRepository) {
-    this.createMaterialUseCase = new CreateMaterialUseCase(materialRepository);
+  constructor(readonly materialRepository: MaterialRepository, readonly unidadeMedidaRepository: UnidadeMedidaRepository) {
+    this.createMaterialUseCase = new CreateMaterialUseCase(materialRepository, unidadeMedidaRepository);
     this.updateMaterialUseCase = new UpdateMaterialUseCase(materialRepository);
     this.getAllMaterialUseCase = new GetAllMaterialUseCase(materialRepository);
     this.deleteMaterialUseCase = new DeleteMaterialUseCase(materialRepository);

@@ -11,4 +11,15 @@ export namespace CreateMaterialErrors {
     }
   }
 
+
+  export class UnidadeMedidaDoesNotExists extends Result<UseCaseError> {    
+    constructor () {
+      super(false, {
+        message: `The Unidade de Medida do not exists`
+      } as UseCaseError)
+    }
+  }
+
+  
+
 }

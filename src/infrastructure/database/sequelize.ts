@@ -1,7 +1,7 @@
 import { Sequelize, Options } from "sequelize";
 import config from "./config/config";
 import colors from "colors/safe";
-import { initModels } from "./models";
+import { initAssociations, initModels } from "./models";
 
 export class Database {
   private sequelizeConnection: Sequelize;
@@ -62,5 +62,9 @@ export class Database {
 
   public initModels() {
     initModels(this.sequelizeConnection);
+  }
+
+  public initAssociations() {
+    initAssociations(this.sequelizeConnection);
   }
 }

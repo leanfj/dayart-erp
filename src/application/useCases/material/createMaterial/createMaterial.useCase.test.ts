@@ -12,7 +12,7 @@ describe("CreateMaterialUseCase", () => {
       titulo: "Material Teste",
       descricao: "Descrição do material teste",
       valor: 20,
-      unidadeMedida: "un"
+      unidadeMedidaId: "1"
     };
 
     const result = await useCase.execute(input);
@@ -23,6 +23,5 @@ describe("CreateMaterialUseCase", () => {
     expect(material.titulo).toBe(input.titulo);
     expect(material.descricao).toBe(input.descricao);
     expect(material.valor).toBe(input.valor);
-    expect(material.unidadeMedida).toBe(input.unidadeMedida);
   });
 });

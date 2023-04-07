@@ -32,8 +32,15 @@ export default class App {
   }
 
   private initializeMiddlewares() {
+
+    this.app.use(express.text({
+      type: '*/*'
+    }));
     this.app.use(express.json());
-    this.app.use(cors());
+
+    this.app.use(cors({
+      origin: '*',
+    }));
   }
 
   private initializeErrorHandling() {

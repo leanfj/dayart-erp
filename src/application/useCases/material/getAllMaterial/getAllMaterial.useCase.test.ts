@@ -15,7 +15,9 @@ describe("GetAllMaterialUseCase", () => {
       titulo: "Material 1",
       descricao: "Descrição do material 1",
       valor: 100,
-      unidadeMedida: "un",
+      unidadeMedidaId: "1",
+      quantidade: 10,
+      valorUnitario: 10,
     };
 
     await createMaterialUseCase.execute(input);

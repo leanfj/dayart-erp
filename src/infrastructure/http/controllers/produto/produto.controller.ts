@@ -9,6 +9,7 @@ import { UpdateProdutoErrors } from "../../../../application/useCases/produto/up
 import { DeleteProdutoErrors } from "../../../../application/useCases/produto/deleteProduto/deleteProdutoErrors";
 import { ValidatorDTOErrors } from "../../../../core/domain/validatorDTOErros";
 import { ensureAuthenticated } from "../../middlewares/ensureAuthenticated.middleware";
+import { Produto } from "domain/entities/produto/produto.entity";
 
 export class ProdutoController extends BaseController {
   public path = "/produtos";
@@ -20,29 +21,48 @@ export class ProdutoController extends BaseController {
   }
 
   private async initializeRoutes() {
+    // this.router.all(
+    //   `${this.path}/*`,
+    //   ensureAuthenticated(),
+    //   (request: Request, response: Response, next: NextFunction) => {}
+    // )
     this.router.post(
       `${this.path}`,
+      ensureAuthenticated(),
       (request: Request, response: Response, next: NextFunction) =>
         this.create(request, response, next)
-    );
+    )
+    this.router.post(
+      `${this.path}/:id`,
+      ensureAuthenticated(),
+      (request: Request, response: Response, next: NextFunction) =>
+        this.insertMaterial(request, response, next)
+    )
     this.router.get(
       `${this.path}`,
       ensureAuthenticated(),
       (request: Request, response: Response, next: NextFunction) =>
-        this.getAll(request, response, next)
-    );
-
+      this.getAll(request, response, next)
+    )
+    this.router.get(
+      `${this.path}/:id`,
+      ensureAuthenticated(),
+      async (request: Request, response: Response, next: NextFunction) =>
+        await this.getById(request, response, next)
+    )
     this.router.patch(
       `${this.path}/:id`,
+      ensureAuthenticated(),
       (request: Request, response: Response, next: NextFunction) =>
         this.update(request, response, next)
-    );
-
+    )
     this.router.delete(
       `${this.path}/:id`,
+      ensureAuthenticated(),
       (request: Request, response: Response, next: NextFunction) =>
         this.delete(request, response, next)
     );
+
     // this.router.get(
     //   `${this.path}/DocEntry/:docEntry`,
     //   (request: Request, response: Response, next: NextFunction) =>
@@ -69,6 +89,22 @@ export class ProdutoController extends BaseController {
       }
     } catch (err) {
       return this.fail(res, err);
+    }
+  }
+
+
+  async getById(request: Request, response: Response, next: NextFunction) {
+    const id = request.params.id;
+    try {
+      const result = await this.produtoService.getById(new UniqueEntityID(id));
+      if (result.isLeft()) {
+        return this.fail(response, result.value.getErrorValue().message);
+      } else {
+        const produto = result.value.getValue() as Produto;
+        return this.ok(response, produto.props.materiais);
+      }
+    } catch (err) {
+      return this.fail(response, err);
     }
   }
 
@@ -133,4 +169,26 @@ export class ProdutoController extends BaseController {
       return this.fail(response, err);
     }
   }
+
+  async insertMaterial(request: Request, response: Response, next: NextFunction) {
+    const material = JSON.parse(decodeURIComponent(request.body).replace(/values=/g, ''));
+    const id = request.params.id;
+    try {
+      const result = await this.produtoService.insertMaterial(
+        material,
+        new UniqueEntityID(id)
+      );
+      if (result.isLeft()) {
+        if (result.value instanceof UpdateProdutoErrors.ProdutoNotExists) {
+          return this.notFound(response, result.value.getErrorValue().message);
+        }
+        return this.fail(response, result.value.getErrorValue().message);
+      } else {
+        return this.ok(response, result);
+      }
+    } catch (err) {
+      return this.fail(response, err);
+    }
+  }
+
 }

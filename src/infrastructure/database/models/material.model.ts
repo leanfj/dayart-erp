@@ -5,7 +5,10 @@ import {
   InferAttributes,
   Model,
   Sequelize,
+  ForeignKey,
 } from "sequelize";
+import { UnidadeMedidaModel } from "./unidadeMedida.model";
+import { MaterialProdutoUnidadeMedidaModel } from "./materialProdutoUnidadeMedida.model";
 
 export class MaterialModel extends Model<
   InferAttributes<MaterialModel>,
@@ -16,7 +19,9 @@ export class MaterialModel extends Model<
   declare descricao: string | null;
   declare codigo: string | null;
   declare valor: number | null;
-  declare unidadeMedida: string | null;
+  declare valorUnitario: number | null;
+  declare quantidade: number | null;
+  declare unidadeMedidaId: ForeignKey<UnidadeMedidaModel["id"]>;
   declare dataCadastro: CreationOptional<Date | null>;
   declare dataAtualizacao: CreationOptional<Date | null>;
 
@@ -40,11 +45,14 @@ export class MaterialModel extends Model<
         codigo: {
           type: DataTypes.STRING(255),
         },
-        valor: {
-          type: DataTypes.DECIMAL(10, 2)
+        quantidade: {
+          type: DataTypes.DECIMAL(10, 2),
         },
-        unidadeMedida: {
-          type: DataTypes.DECIMAL(10, 2)
+        valor: {
+          type: DataTypes.DECIMAL(10, 2),
+        },
+        valorUnitario: {
+          type: DataTypes.DECIMAL(10, 2),
         },
         dataCadastro: {
           type: "TIMESTAMP",
@@ -53,9 +61,7 @@ export class MaterialModel extends Model<
         },
         dataAtualizacao: {
           type: "TIMESTAMP",
-          defaultValue: sequelize.literal(
-            "CURRENT_TIMESTAMP"
-          ),
+          defaultValue: sequelize.literal("CURRENT_TIMESTAMP"),
           allowNull: false,
         },
       },
@@ -69,5 +75,43 @@ export class MaterialModel extends Model<
     );
 
     return MaterialModel;
+  }
+
+  static associate(models: any) {
+    MaterialModel.belongsTo(models.UnidadeMedidaModel, {
+      foreignKey: "unidade_medida_id",
+      as: "unidadeMedida",
+    });
+
+    MaterialModel.hasMany(models.MaterialProdutoUnidadeMedidaModel, {
+      foreignKey: "material_id",
+      as: "material",
+    });
+
+    MaterialModel.belongsToMany(models.ProdutoModel, {
+      through: {
+        model: MaterialProdutoUnidadeMedidaModel,
+        unique: false,
+      },
+      as: "produtos",
+      foreignKey: "material_id",
+      otherKey: "produto_id",
+    });
+
+
+    MaterialModel.belongsToMany(models.UnidadeMedidaModel, {
+      through: {
+        model: MaterialProdutoUnidadeMedidaModel,
+        unique: false
+      },
+      as: "unidadeMedidas",
+      foreignKey: "unidade_medida_id",
+      otherKey: "produto_id"
+    });
+
+    MaterialModel.hasMany(models.MaterialProdutoModel, {
+      foreignKey: "material_id",
+      as: "materiaisProdutos",
+    });
   }
 }

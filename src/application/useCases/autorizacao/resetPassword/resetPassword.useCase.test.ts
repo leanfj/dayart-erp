@@ -36,7 +36,7 @@ describe("ResetPasswordUseCase", () => {
     const link = await requestResetPasswordUseCase.execute("leandro@email.com");
 
     const regexPatternURL =
-      /http\:\/\/localhost\:3000\/change-password\?|https\:\/\/dayart-web\.onrender\.com\/#\/change-password\?/gm;
+      /http\:\/\/localhost\:3000#\/change-password\?|https\:\/\/dayart-web\.onrender\.com\/#\/change-password\?/gm;
     const tokenAndUsuarioId = link.value
       .getValue()
       .toString()

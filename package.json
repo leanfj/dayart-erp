@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "prestart": "npm run build && npm run copy:templates",
+    "prestart:prod": "npm run build && npm run copy:templates",
     "start": "node dist/index.js",
     "create-env": "printenv > .env",
     "test": "vitest -w",

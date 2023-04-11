@@ -8,8 +8,6 @@ import {
   BelongsToManyAddAssociationMixin,
 } from "sequelize";
 import { MaterialModel } from "./material.model";
-import { UnidadeMedidaModel } from "./unidadeMedida.model";
-import { ProdutoModel } from "./produto.model";
 
 export class MaterialProdutoUnidadeMedidaModel extends Model<
   InferAttributes<MaterialProdutoUnidadeMedidaModel>,
@@ -19,6 +17,7 @@ export class MaterialProdutoUnidadeMedidaModel extends Model<
   declare dataCadastro: CreationOptional<Date | null>;
   declare dataAtualizacao: CreationOptional<Date | null>;
   declare quantidade: number | null;
+  declare preco: number | null;
   declare addMateriais: BelongsToManyAddAssociationMixin<MaterialModel, string>;
 
   static initModel(
@@ -34,6 +33,9 @@ export class MaterialProdutoUnidadeMedidaModel extends Model<
           defaultValue: DataTypes.UUIDV4,
         },
         quantidade: {
+          type: DataTypes.DECIMAL(10, 2),
+        },
+        preco: {
           type: DataTypes.DECIMAL(10, 2),
         },
         dataCadastro: {

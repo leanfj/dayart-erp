@@ -167,9 +167,9 @@ export class ProdutoDBRepository implements ProdutoRepository {
   async insertMaterial(id: string, input: any): Promise<Response> {
     try {
       const produtoData = await ProdutoModel.findByPk(id.toString());
-      // const materialData = await MaterialModel.findByPk(
-      //   input.material.id.toString()
-      // );
+      const materialData = await MaterialModel.findByPk(
+        input.material.id.toString()
+      );
       // const unidadeMedidaData = await UnidadeMedidaModel.findByPk(
       //   input.unidadeMedida.id.toString()
       // );
@@ -187,6 +187,7 @@ export class ProdutoDBRepository implements ProdutoRepository {
         {
           through: {
             quantidade: input.quantidade,
+            preco: materialData.valorUnitario * input.quantidade,
             unidade_medida_id: input.unidadeMedida.id.toString(),
           },
           returning: true,

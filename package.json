@@ -35,11 +35,11 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "handlebars": "^4.7.7",
-    "jsonwebtoken": "^9.0.0",
+    "jsonwebtoken": "^9.0.2",
     "nodemailer": "^6.9.1",
     "pg": "^8.9.0",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.29.0"
+    "sequelize": "^6.33.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
